@@ -91,7 +91,7 @@ namespace Infrastructure
         public async Task<IEnumerable<T>> PagingAsync(string[] searchFields, string[] searchValue, string sortField, bool isAsc, int pageSize, int skip)
         {
             string postcacheKey = CacheKeyUtils.GenerateCacheKey(searchFields, searchValue, sortField, isAsc, pageSize, skip);
-            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
+            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(1));
             IFindFluent<T, T> query;
 
             if (_memoryCache.TryGetValue(cacheKey + postcacheKey, out query))
@@ -113,7 +113,7 @@ namespace Infrastructure
                                   .Limit(pageSize)
                                   .Skip((skip - 1) * pageSize);
 
-            _memoryCache.Set(cacheKey + postcacheKey, query, cacheEntryOptions);
+           _memoryCache.Set(cacheKey + postcacheKey, query, cacheEntryOptions);
             return await query.ToListAsync();
         }
 

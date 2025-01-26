@@ -23,6 +23,18 @@ namespace Controller.Dependency_Injection
         }
         public static void AddSettings(this IServiceCollection services)
         {
+            //CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader();
+                    });
+            });
+
             //MemoryCache
             services.AddMemoryCache();
 

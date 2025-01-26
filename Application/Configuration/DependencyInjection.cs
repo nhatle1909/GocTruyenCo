@@ -16,7 +16,9 @@ namespace Application.Configuration
             //Account
             services.AddTransient<IAccountService, AccountService>();
             //ComicCategory
-            services.AddTransient<IComicCategoryService, ComicCategoryService>(); 
+            services.AddTransient<IComicCategoryService, ComicCategoryService>();
+            //Comic
+            services.AddTransient<IComicService, ComicService>();
             //AutoMapper
             services.AddAutoMapper(typeof(MapperProfile));
         }

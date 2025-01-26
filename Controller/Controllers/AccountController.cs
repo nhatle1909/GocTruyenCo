@@ -20,9 +20,7 @@ namespace Controller.Controllers
         [HttpGet()]
         public async Task<IActionResult> PagingAsync([FromQuery] SearchDTO searchDTO)
         {
-            var query = await _accountService.GetPagingAsync(searchDTO.searchFields, searchDTO.searchValues,
-                searchDTO.sortField, searchDTO.sortAscending,
-                searchDTO.pageSize, searchDTO.skip);
+            var query = await _accountService.GetPagingAsync(searchDTO);
             return Ok(query);
         }
         [HttpGet("{accountId}")]

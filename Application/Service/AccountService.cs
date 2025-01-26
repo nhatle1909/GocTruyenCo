@@ -54,11 +54,12 @@ namespace Application.Service
             return result;
         }
 
-        public async Task<ServiceResponse<IEnumerable<QueryAccountDTO>>> GetPagingAsync(string[] fieldnames, string[] searchValue, string sortfield, bool isAsc, int pageSize, int skip)
+        public async Task<ServiceResponse<IEnumerable<QueryAccountDTO>>> GetPagingAsync(SearchDTO searchDTO)
         {
             ServiceResponse<IEnumerable<QueryAccountDTO>> result = new ServiceResponse<IEnumerable<QueryAccountDTO>>();
 
-            var query = await _unitofwork.GetRepository<Account>().PagingAsync(fieldnames, searchValue, sortfield, isAsc, pageSize, skip);
+            var query = await _unitofwork.GetRepository<Account>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField
+                , searchDTO.sortAscending,searchDTO.pageSize,searchDTO.skip);
             var queryDTO = _mapper.Map<IEnumerable<QueryAccountDTO>>(query);
 
             result.SuccessRetrieveResponse(queryDTO);
