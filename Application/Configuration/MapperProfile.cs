@@ -10,10 +10,13 @@ namespace Application.Configuration
         {
             //Authenticate
             CreateMap<Account, AuthenticateDTO>().ReverseMap();
+            CreateMap<Account, SignUpDTO>().ReverseMap();
             //Account
-            CreateMap<Account, AccountDTO>().ReverseMap();
-            CreateMap<Account, CreateAccountDTO>().ReverseMap();
-            CreateMap<Account, UpdateAccountDTO>().ReverseMap();
+            CreateMap<Account, QueryAccountDTO>().ReverseMap();
+            CreateMap<Account, CommandAccountDTO>().ReverseMap();
+            //ComicCategory
+            CreateMap<ComicCategory, QueryComicCategoryDTO>().ReverseMap();
+            CreateMap<ComicCategory, CommandComicCategoryDTO>().ReverseMap();
 
         }
     }

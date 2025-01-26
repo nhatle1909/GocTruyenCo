@@ -15,6 +15,8 @@ namespace Application.Configuration
             services.AddScoped<IAuthenticateService, AuthenticateService>();
             //Account
             services.AddTransient<IAccountService, AccountService>();
+            //ComicCategory
+            services.AddTransient<IComicCategoryService, ComicCategoryService>(); 
             //AutoMapper
             services.AddAutoMapper(typeof(MapperProfile));
         }

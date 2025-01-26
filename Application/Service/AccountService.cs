@@ -39,51 +39,51 @@ namespace Application.Service
             }
         }
 
-        public async Task<ServiceResponse<IEnumerable<AccountDTO>>> GetAllAccountAsync()
+        public async Task<ServiceResponse<IEnumerable<QueryAccountDTO>>> GetAllAccountAsync()
         {
 
-            ServiceResponse<IEnumerable<AccountDTO>> result = new ServiceResponse<IEnumerable<AccountDTO>>();
+            ServiceResponse<IEnumerable<QueryAccountDTO>> result = new ServiceResponse<IEnumerable<QueryAccountDTO>>();
 
             var query = await _unitofwork.GetRepository<Account>().GetAllAsync();
 
             if (query != null)
             {
-                var queryDTO = _mapper.Map<IEnumerable<AccountDTO>>(query);
+                var queryDTO = _mapper.Map<IEnumerable<QueryAccountDTO>>(query);
                 result.SuccessRetrieveResponse(queryDTO);
             }
             return result;
         }
 
-        public async Task<ServiceResponse<IEnumerable<AccountDTO>>> GetPagingAsync(string[] fieldnames, string[] searchValue, string sortfield, bool isAsc, int pageSize, int skip)
+        public async Task<ServiceResponse<IEnumerable<QueryAccountDTO>>> GetPagingAsync(string[] fieldnames, string[] searchValue, string sortfield, bool isAsc, int pageSize, int skip)
         {
-            ServiceResponse<IEnumerable<AccountDTO>> result = new ServiceResponse<IEnumerable<AccountDTO>>();
+            ServiceResponse<IEnumerable<QueryAccountDTO>> result = new ServiceResponse<IEnumerable<QueryAccountDTO>>();
 
             var query = await _unitofwork.GetRepository<Account>().PagingAsync(fieldnames, searchValue, sortfield, isAsc, pageSize, skip);
-            var queryDTO = _mapper.Map<IEnumerable<AccountDTO>>(query);
+            var queryDTO = _mapper.Map<IEnumerable<QueryAccountDTO>>(query);
 
             result.SuccessRetrieveResponse(queryDTO);
 
             return result;
         }
 
-        public async Task<ServiceResponse<AccountDTO>> GetByIdAsync(Guid id)
+        public async Task<ServiceResponse<QueryAccountDTO>> GetByIdAsync(Guid id)
         {
-            ServiceResponse<AccountDTO> result = new ServiceResponse<AccountDTO>();
+            ServiceResponse<QueryAccountDTO> result = new ServiceResponse<QueryAccountDTO>();
             Account item = await _unitofwork.GetRepository<Account>().GetByIdAsync(id);
             if (item != null)
             {
-                var itemDTO = _mapper.Map<AccountDTO>(item);
+                var itemDTO = _mapper.Map<QueryAccountDTO>(item);
                 result.SuccessRetrieveResponse(itemDTO);
             }
             return result;
         }
 
-        public async Task<ServiceResponse<bool>> UpdateAccountAsync(UpdateAccountDTO updateAccountDTO)
+        public async Task<ServiceResponse<bool>> UpdateAccountAsync(Guid accountId, CommandAccountDTO commandAccountDTO)
         {
             ServiceResponse<bool> result = new ServiceResponse<bool>();
-            Account item = _mapper.Map<Account>(updateAccountDTO);
+            Account item = _mapper.Map<Account>(commandAccountDTO);
 
-            bool query = await _unitofwork.GetRepository<Account>().UpdateItemAsync(item.Id, item);
+            bool query = await _unitofwork.GetRepository<Account>().UpdateItemAsync(accountId, item);
             if (query)
             {
                 await _unitofwork.CommitAsync();

@@ -1,21 +1,13 @@
 ﻿namespace Application.DTO
 {
-    public class AccountDTO
+    public class QueryAccountDTO
     {
         public required Guid Id { get; set; }
         public required string Email { get; set; }
         public required string Username { get; set; }
     }
-    public class CreateAccountDTO
+    public class CommandAccountDTO
     {
-        public required string Email { get; set; }
-        public required string Password { get; set; }
-        public required string Username { get; set; }
-        public required string Role { get; set; }
-    }
-    public class UpdateAccountDTO
-    {
-        public required Guid Id { get; set; }
         public required string Password { get; set; }
         public required string Username { get; set; }
     }

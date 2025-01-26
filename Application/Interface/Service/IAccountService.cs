@@ -9,9 +9,9 @@ namespace Application.Interface.Service
     {
         Task<ServiceResponse<bool>> UpdateRoleAsync(Guid accountId,string role);
         Task<ServiceResponse<bool>> RestrictAccountAsync(Guid id);
-        Task<ServiceResponse<bool>> UpdateAccountAsync(UpdateAccountDTO updateAccountDTO);
-        Task<ServiceResponse<AccountDTO>> GetByIdAsync(Guid id);
-        Task<ServiceResponse<IEnumerable<AccountDTO>>> GetAllAccountAsync();
-        Task<ServiceResponse<IEnumerable<AccountDTO>>> GetPagingAsync(string[] fieldnames, string[] searchValue, string sortfield, bool isAsc, int pageSize, int skip);
+        Task<ServiceResponse<bool>> UpdateAccountAsync(Guid accountId,CommandAccountDTO updateAccountDTO);
+        Task<ServiceResponse<QueryAccountDTO>> GetByIdAsync(Guid id);
+        Task<ServiceResponse<IEnumerable<QueryAccountDTO>>> GetAllAccountAsync();
+        Task<ServiceResponse<IEnumerable<QueryAccountDTO>>> GetPagingAsync(string[] fieldnames, string[] searchValue, string sortfield, bool isAsc, int pageSize, int skip);
     }
 }

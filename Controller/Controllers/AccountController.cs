@@ -45,11 +45,11 @@ namespace Controller.Controllers
             }
             return Ok(query);
         }
-        [HttpPut]
-        public async Task<IActionResult> Put(UpdateAccountDTO updateAccountDTO)
+        [HttpPut("{accountId}")]
+        public async Task<IActionResult> Put(Guid accountId,CommandAccountDTO updateAccountDTO)
         {
 
-            var query = await _accountService.UpdateAccountAsync(updateAccountDTO);
+            var query = await _accountService.UpdateAccountAsync(accountId, updateAccountDTO);
             if (!query.Success)
             {
                 return BadRequest(query);
