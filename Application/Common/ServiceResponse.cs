@@ -4,7 +4,7 @@
     {
         public bool Success { get; set; } = false;
         public T Result { get; set; }
-        public string Message { get; set; } = "Failed response";
+        public string Message { get; set; } = "Failed Response";
         public void SuccessCreateResponse()
         {
             Success = true;
@@ -25,6 +25,11 @@
         {
             Success = true;
             Message = "Delete successful";
+        }
+        public void TryCatchResponse(Exception ex)
+        {
+            Success = false;
+            Message = ex.Message;
         }
 
     }

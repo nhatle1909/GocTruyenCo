@@ -1,14 +1,10 @@
-﻿using Application.Common;
+﻿using Application.Aggregation;
+using Application.Common;
 using Application.DTO;
 using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Service
 {
@@ -24,15 +20,19 @@ namespace Application.Service
         public async Task<ServiceResponse<bool>> CreateComicAsync(CommandComicDTO comicDTO)
         {
             ServiceResponse<bool> result = new();
-            
-            var comic = _mapper.Map<Comic>(comicDTO);
 
+            var comic = _mapper.Map<Comic>(comicDTO);
+            try { 
             var query = await _unitofwork.GetRepository<Comic>().AddOneItemAsync(comic);
 
             if (query)
             {
                 await _unitofwork.CommitAsync();
                 result.SuccessCreateResponse();
+            }
+            }catch (Exception ex)
+            {
+                result.TryCatchResponse(ex);
             }
             return result;
         }
@@ -71,7 +71,7 @@ namespace Application.Service
         {
            ServiceResponse<List<QueryComicDTO>> result = new();
             var query = await _unitofwork.GetRepository<Comic>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField
-                , searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip);
+                , searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip,ComicAggregation.ComicBsonAggregation);
 
             var queryDTO = _mapper.Map<List<QueryComicDTO>>(query);
 

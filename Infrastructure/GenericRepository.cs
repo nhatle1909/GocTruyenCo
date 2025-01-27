@@ -2,6 +2,7 @@
 using Infrastructure.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 namespace Infrastructure
 {
@@ -9,6 +10,7 @@ namespace Infrastructure
     {
         private readonly IMongoCollection<T> _collection;
         private readonly IMemoryCache _memoryCache;
+
         private readonly string cacheKey;
 
         public GenericRepository(IMongoDatabase database, string collectionName, IMemoryCache memoryCache)
@@ -27,9 +29,9 @@ namespace Infrastructure
                 await _collection.InsertOneAsync(item);
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                throw new ArgumentException(ex.Message);
             }
         }
 
@@ -42,11 +44,12 @@ namespace Infrastructure
                 await _collection.InsertManyAsync(items);
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                throw new ArgumentException(ex.Message);
             }
         }
+
         public async Task<T> GetByIdAsync(Guid id)
         {
 
@@ -88,17 +91,19 @@ namespace Infrastructure
             return itemList;
         }
 
-        public async Task<IEnumerable<T>> PagingAsync(string[] searchFields, string[] searchValue, string sortField, bool isAsc, int pageSize, int skip)
+        public async Task<IEnumerable<T>> PagingAsync(string[] searchFields, string[] searchValue, string sortField, bool isAsc, int pageSize, int skip, BsonDocument[] aggregates = null)
         {
             string postcacheKey = CacheKeyUtils.GenerateCacheKey(searchFields, searchValue, sortField, isAsc, pageSize, skip);
             var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(1));
-            IFindFluent<T, T> query;
+            IAggregateFluent<T> query;
 
+            //Check cache
             if (_memoryCache.TryGetValue(cacheKey + postcacheKey, out query))
             {
                 return await query.ToListAsync();
             }
-
+           
+            //Create Filter
             FilterDefinition<T> filterDefinition = Builders<T>.Filter.Empty;
             for (int i = 0; i < searchFields.Length; i++)
             {
@@ -106,14 +111,22 @@ namespace Infrastructure
                 filterDefinition = Builders<T>.Filter.And(filterDefinition, tempFilter);
             }
 
+            //Create Sort
             SortDefinition<T> sortDefinition = isAsc ? Builders<T>.Sort.Ascending(sortField) : Builders<T>.Sort.Descending(sortField);
 
-            query = _collection.Find(filterDefinition)
-                                  .Sort(sortDefinition)
-                                  .Limit(pageSize)
-                                  .Skip((skip - 1) * pageSize);
-
-           _memoryCache.Set(cacheKey + postcacheKey, query, cacheEntryOptions);
+            //Query
+            query = _collection.Aggregate()
+                               .Match(filterDefinition);
+            foreach ( var item in aggregates)
+            {
+                query = query.AppendStage<T>(item);
+            }
+            //Sort and paging
+            query = query.Sort(sortDefinition)
+                         .Limit(pageSize)
+                         .Skip((skip - 1) * pageSize);
+            //Add to cache
+            _memoryCache.Set(cacheKey + postcacheKey, query, cacheEntryOptions);
             return await query.ToListAsync();
         }
 

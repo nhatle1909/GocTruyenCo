@@ -33,7 +33,7 @@ namespace Application.Service
 
                     await _unitofwork.GetRepository<Account>().UpdateItemAsync(id, query);
                     await _unitofwork.CommitAsync();
-                    result.SuccessDeleteResponse();
+                    result.SuccessUpdateResponse();
                 }
                 return result;
             }

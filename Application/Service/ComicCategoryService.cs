@@ -29,7 +29,7 @@ namespace Application.Service
 
             var command = await _unitofwork.GetRepository<ComicCategory>().AddOneItemAsync(newComicCategory);
             
-            if (command != null)
+            if (command)
             {
                 await _unitofwork.CommitAsync();
                 result.SuccessCreateResponse();
