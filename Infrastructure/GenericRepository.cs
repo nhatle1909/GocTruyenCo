@@ -50,7 +50,7 @@ namespace Infrastructure
             }
         }
 
-        public async Task<T> GetByIdAsync(Guid id)
+        public async Task<T> GetByIdAsync(Guid id, BsonDocument[] aggregates = null)
         {
 
 
@@ -64,9 +64,18 @@ namespace Infrastructure
             }
 
             var filter = Builders<T>.Filter.Eq("Id", id);
-            var item = await _collection.FindAsync(filter);
 
-            result = await item.FirstOrDefaultAsync();
+            var item = _collection.Aggregate()
+                .Match(filter);
+            if (aggregates != null)
+            {
+                foreach (var Stage in aggregates)
+                {
+                    item = item.AppendStage<T>(Stage);
+                }
+
+            }
+                result = await item.FirstOrDefaultAsync();
 
             _memoryCache.Set(cacheKey + id, result, cacheEntryOptions);
 
@@ -117,9 +126,12 @@ namespace Infrastructure
             //Query
             query = _collection.Aggregate()
                                .Match(filterDefinition);
-            foreach ( var item in aggregates)
+            if (aggregates != null)
             {
-                query = query.AppendStage<T>(item);
+                foreach (var item in aggregates)
+                {
+                    query = query.AppendStage<T>(item);
+                }
             }
             //Sort and paging
             query = query.Sort(sortDefinition)

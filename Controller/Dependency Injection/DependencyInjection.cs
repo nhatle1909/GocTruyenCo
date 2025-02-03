@@ -18,7 +18,11 @@ namespace Controller.Dependency_Injection
             services.AddApplicationService();
         }
         public static void AddValidation(this IServiceCollection services)
-        { 
+        {
+            //Authenticate
+            services.AddTransient<IValidator<AuthenticateDTO>, AuthenticateDTOValidation>();
+            services.AddTransient<IValidator<SignUpDTO>, SignUpDTOValidation>();
+            //Account
             services.AddTransient<IValidator<CommandAccountDTO>, CommandAccountDTOValidation>();
         }
         public static void AddSettings(this IServiceCollection services)
