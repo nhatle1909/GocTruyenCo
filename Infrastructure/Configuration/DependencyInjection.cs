@@ -1,14 +1,16 @@
 ﻿
 using Application.Interface;
-
-
+using CloudinaryDotNet;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
+using System.Runtime.CompilerServices;
 
 namespace Infrastructure.Configuration
 {
-    public static class DependencyInjection
+    public static class DependencyInjection 
     {
         public static void AddInfrastructureService(this IServiceCollection services)
         {
@@ -19,11 +21,17 @@ namespace Infrastructure.Configuration
                 var uri = s.GetRequiredService<IConfiguration>()["ConnectionString"];
                 return new MongoClient(uri);
             });
+            
             //Unitofwork
             services.AddScoped<IUnitofwork, Unitofwork>();
             //GenericRepository
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            //Cloudinary
+            services.AddScoped<ICloudinaryRepository, CloudinaryRepository>();
 
+            services.AddSingleton(services => new Cloudinary(new Account(services.GetRequiredService<IConfiguration>()["Cloudinary:CloudName"],
+                                                                         services.GetRequiredService<IConfiguration>()["Cloudinary:ApiKey"],
+                                                                         services.GetRequiredService<IConfiguration>()["Cloudinary:ApiSecret"])));
         }
     }
 }

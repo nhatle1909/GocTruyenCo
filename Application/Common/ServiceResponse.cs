@@ -31,6 +31,12 @@
             Success = false;
             Message = ex.Message;
         }
+        public void CustomResponse(T result ,bool success, string message)
+        {
+            Result = result;
+            Success = success;
+            Message = message;
+        }
 
     }
 }

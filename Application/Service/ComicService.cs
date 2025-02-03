@@ -69,7 +69,7 @@ namespace Application.Service
 
         public async Task<ServiceResponse<List<QueryComicDTO>>> GetComicPagingAsync(SearchDTO searchDTO)
         {
-           ServiceResponse<List<QueryComicDTO>> result = new();
+            ServiceResponse<List<QueryComicDTO>> result = new();
             var query = await _unitofwork.GetRepository<Comic>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField
                 , searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip,ComicAggregation.ComicBsonAggregation);
 

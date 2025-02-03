@@ -21,6 +21,8 @@ namespace Application.Configuration
             services.AddTransient<IComicService, ComicService>();
             //AutoMapper
             services.AddAutoMapper(typeof(MapperProfile));
+            //Cloudinary
+            services.AddScoped<ICloudinaryService, CloudinaryService>();
         }
     }
 }
