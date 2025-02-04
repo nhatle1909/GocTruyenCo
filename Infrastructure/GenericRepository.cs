@@ -2,7 +2,6 @@
 using Infrastructure.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 namespace Infrastructure
 {
@@ -75,7 +74,7 @@ namespace Infrastructure
                 }
 
             }
-                result = await item.FirstOrDefaultAsync();
+            result = await item.FirstOrDefaultAsync();
 
             _memoryCache.Set(cacheKey + id, result, cacheEntryOptions);
 
@@ -111,7 +110,7 @@ namespace Infrastructure
             {
                 return await query.ToListAsync();
             }
-           
+
             //Create Filter
             FilterDefinition<T> filterDefinition = Builders<T>.Filter.Empty;
             for (int i = 0; i < searchFields.Length; i++)

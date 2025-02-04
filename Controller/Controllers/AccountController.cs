@@ -34,9 +34,9 @@ namespace Controller.Controllers
             return Ok(query);
         }
         [HttpPost("{accountId}")]
-        public async Task<IActionResult> UpdateRole(Guid accountId,string role)
+        public async Task<IActionResult> UpdateRole(Guid accountId, string role)
         {
-            var query = await _accountService.UpdateRoleAsync(accountId,role);
+            var query = await _accountService.UpdateRoleAsync(accountId, role);
             if (!query.Success)
             {
                 return BadRequest(query);
@@ -44,7 +44,7 @@ namespace Controller.Controllers
             return Ok(query);
         }
         [HttpPut("{accountId}")]
-        public async Task<IActionResult> Put(Guid accountId,CommandAccountDTO updateAccountDTO)
+        public async Task<IActionResult> Put(Guid accountId, CommandAccountDTO updateAccountDTO)
         {
 
             var query = await _accountService.UpdateAccountAsync(accountId, updateAccountDTO);

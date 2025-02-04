@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.DTO
+﻿namespace Application.DTO
 {
     public class QueryComicDTO
     {
@@ -15,7 +9,7 @@ namespace Application.DTO
         public required string Description { get; set; }
         public required string ThemeURL { get; set; }
         public required int Chapters { get; set; }
-        public required string Status { get;set; }
+        public required string Status { get; set; }
     }
     public class CommandComicDTO
     {

@@ -2,11 +2,6 @@
 using Application.Interface;
 using Application.Interface.Service;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Service
 {
@@ -33,14 +28,14 @@ namespace Application.Service
             return response;
         }
 
-        public async  Task<ServiceResponse<string>> UploadThemeUrl(string comicName, IFormFile image)
+        public async Task<ServiceResponse<string>> UploadThemeUrl(string comicName, IFormFile image)
         {
             ServiceResponse<string> response = new();
             try
             {
                 var result = await _unitofwork.CloudinaryRepository.UploadComicThemeAsync(comicName, image);
-                
-                response.CustomResponse(result,true,"Upload Theme Successfully");
+
+                response.CustomResponse(result, true, "Upload Theme Successfully");
             }
             catch (Exception ex)
             {

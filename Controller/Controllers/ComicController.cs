@@ -8,8 +8,8 @@ namespace Controller.Controllers
     [Route("[controller]")]
     public class ComicController : ControllerBase
     {
-      private readonly IComicService _comicService;
-      public ComicController(IComicService comicService)
+        private readonly IComicService _comicService;
+        public ComicController(IComicService comicService)
         {
             _comicService = comicService;
         }

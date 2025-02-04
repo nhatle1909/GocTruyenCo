@@ -23,17 +23,23 @@ namespace Application.Service
         {
             {
                 ServiceResponse<bool> result = new ServiceResponse<bool>();
-
-                Account query = await _unitofwork.GetRepository<Account>().GetByIdAsync(id);
-                if (query != null)
+                try
                 {
-                    var newRole = query.Role;
-                    Enum.TryParse<Role>(role, out newRole);
-                    query.Role = newRole;
+                    Account query = await _unitofwork.GetRepository<Account>().GetByIdAsync(id);
+                    if (query != null)
+                    {
+                        var newRole = query.Role;
+                        Enum.TryParse<Role>(role, out newRole);
+                        query.Role = newRole;
 
-                    await _unitofwork.GetRepository<Account>().UpdateItemAsync(id, query);
-                    await _unitofwork.CommitAsync();
-                    result.SuccessUpdateResponse();
+                        await _unitofwork.GetRepository<Account>().UpdateItemAsync(id, query);
+                        await _unitofwork.CommitAsync();
+                        result.CustomResponse(true, true, "Role Updated Successfully");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result.TryCatchResponse(ex);
                 }
                 return result;
             }
@@ -43,38 +49,57 @@ namespace Application.Service
         {
 
             ServiceResponse<IEnumerable<QueryAccountDTO>> result = new ServiceResponse<IEnumerable<QueryAccountDTO>>();
-
-            var query = await _unitofwork.GetRepository<Account>().GetAllAsync();
-
-            if (query != null)
+            try
             {
-                var queryDTO = _mapper.Map<IEnumerable<QueryAccountDTO>>(query);
-                result.SuccessRetrieveResponse(queryDTO);
+                var query = await _unitofwork.GetRepository<Account>().GetAllAsync();
+
+                if (query != null)
+                {
+                    var queryDTO = _mapper.Map<IEnumerable<QueryAccountDTO>>(query);
+                    result.CustomResponse(queryDTO, true, "Success Retrieve Data");
+                }
+            }
+            catch (Exception ex)
+            {
+                result.TryCatchResponse(ex);
             }
             return result;
         }
 
         public async Task<ServiceResponse<IEnumerable<QueryAccountDTO>>> GetPagingAsync(SearchDTO searchDTO)
         {
+
             ServiceResponse<IEnumerable<QueryAccountDTO>> result = new ServiceResponse<IEnumerable<QueryAccountDTO>>();
+            try
+            {
+                var query = await _unitofwork.GetRepository<Account>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField
+                    , searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip);
+                var queryDTO = _mapper.Map<IEnumerable<QueryAccountDTO>>(query);
 
-            var query = await _unitofwork.GetRepository<Account>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField
-                , searchDTO.sortAscending,searchDTO.pageSize,searchDTO.skip);
-            var queryDTO = _mapper.Map<IEnumerable<QueryAccountDTO>>(query);
-
-            result.SuccessRetrieveResponse(queryDTO);
-
+                result.CustomResponse(queryDTO, true, "Success Retrieve Data");
+            }
+            catch (Exception ex)
+            {
+                result.TryCatchResponse(ex);
+            }
             return result;
         }
 
         public async Task<ServiceResponse<QueryAccountDTO>> GetByIdAsync(Guid id)
         {
             ServiceResponse<QueryAccountDTO> result = new ServiceResponse<QueryAccountDTO>();
-            Account item = await _unitofwork.GetRepository<Account>().GetByIdAsync(id);
-            if (item != null)
+            try
             {
-                var itemDTO = _mapper.Map<QueryAccountDTO>(item);
-                result.SuccessRetrieveResponse(itemDTO);
+                Account item = await _unitofwork.GetRepository<Account>().GetByIdAsync(id);
+                if (item != null)
+                {
+                    var itemDTO = _mapper.Map<QueryAccountDTO>(item);
+                    result.CustomResponse(itemDTO, true, "Success Retrieve Data");
+                }
+            }
+            catch (Exception ex)
+            {
+                result.TryCatchResponse(ex);
             }
             return result;
         }
@@ -82,13 +107,20 @@ namespace Application.Service
         public async Task<ServiceResponse<bool>> UpdateAccountAsync(Guid accountId, CommandAccountDTO commandAccountDTO)
         {
             ServiceResponse<bool> result = new ServiceResponse<bool>();
-            Account item = _mapper.Map<Account>(commandAccountDTO);
-
-            bool query = await _unitofwork.GetRepository<Account>().UpdateItemAsync(accountId, item);
-            if (query)
+            try
             {
-                await _unitofwork.CommitAsync();
-                result.SuccessUpdateResponse();
+                Account item = _mapper.Map<Account>(commandAccountDTO);
+
+                bool query = await _unitofwork.GetRepository<Account>().UpdateItemAsync(accountId, item);
+                if (query)
+                {
+                    await _unitofwork.CommitAsync();
+                    result.CustomResponse(true, true, "Data Updated Successfully");
+                }
+            }
+            catch (Exception ex)
+            {
+                result.TryCatchResponse(ex);
             }
             return result;
         }
@@ -104,7 +136,7 @@ namespace Application.Service
                     query.isRestricted = true;
                     await _unitofwork.GetRepository<Account>().UpdateItemAsync(id, query);
                     await _unitofwork.CommitAsync();
-                    result.SuccessDeleteResponse();
+                    result.CustomResponse(true, true, "Restrict Account Successfully");
                 }
                 return result;
             }

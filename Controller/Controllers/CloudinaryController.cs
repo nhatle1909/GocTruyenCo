@@ -1,5 +1,4 @@
-﻿using Application.DTO;
-using Application.Interface.Service;
+﻿using Application.Interface.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Controller.Controllers
@@ -8,11 +7,11 @@ namespace Controller.Controllers
     [Route("[controller]")]
     public class CloudinaryController : ControllerBase
     {
-      private readonly ICloudinaryService _cloudinaryService;
-      public CloudinaryController(ICloudinaryService cloudinaryService)
-      {
+        private readonly ICloudinaryService _cloudinaryService;
+        public CloudinaryController(ICloudinaryService cloudinaryService)
+        {
             _cloudinaryService = cloudinaryService;
-      }
+        }
 
         [HttpPost("Theme")]
         public async Task<IActionResult> UploadThemeUrl(IFormFile imageFile)

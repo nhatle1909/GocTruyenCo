@@ -13,7 +13,7 @@ namespace Domain.Entities
         [BsonElement] public required string ThemeURL { get; set; }
         [BsonElement] public required int Chapters { get; set; }
         [BsonElement] public required ComicStatus Status { get; set; }
-        
+
         //Only Deserializing field
         [BsonElement][BsonIgnore] public required List<string> Category { get; set; }
     }

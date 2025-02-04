@@ -1,10 +1,5 @@
 ﻿using Application.Common;
 using Application.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Interface.Service
 {
@@ -17,7 +12,7 @@ namespace Application.Interface.Service
         Task<ServiceResponse<List<QueryComicDTO>>> GetComicPagingAsync(SearchDTO searchDTO);
         Task<ServiceResponse<bool>> UpdateComicStatusAsync(Guid id, string status);
         Task<ServiceResponse<bool>> UpdateComicChapterNumberAsync(Guid id, int chapters);
-        
+
 
     }
 }

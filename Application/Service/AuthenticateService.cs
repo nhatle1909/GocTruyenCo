@@ -46,14 +46,30 @@ namespace Application.Service
         public async Task<ServiceResponse<bool>> SignUpAsync(SignUpDTO signupDTO)
         {
             ServiceResponse<bool> result = new ServiceResponse<bool>();
-
-            Account item = _mapper.Map<Account>(signupDTO);
-
-            bool query = await _unitofwork.GetRepository<Account>().AddOneItemAsync(item);
-            if (query)
+            try
             {
-                await _unitofwork.CommitAsync();
-                result.SuccessCreateResponse();
+                Account item = _mapper.Map<Account>(signupDTO);
+                string[] email = ["Email"];
+                string[] emailValue = [signupDTO.Email];
+                var query = await _unitofwork.GetRepository<Account>().GetAllByFilterAsync(email, emailValue);
+
+                if (query.Count() > 0)
+                {
+                    result.CustomResponse(false, false, "Email already exist");
+                    return result;
+                }
+
+                bool command = await _unitofwork.GetRepository<Account>().AddOneItemAsync(item);
+
+                if (command)
+                {
+                    await _unitofwork.CommitAsync();
+                    result.CustomResponse(true, true, "Register succesfully");
+                }
+            }
+            catch (Exception ex)
+            {
+                result.TryCatchResponse(ex);
             }
             return result;
         }

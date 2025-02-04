@@ -1,11 +1,5 @@
 ﻿using Application.Common;
 using Microsoft.AspNetCore.Http;
-using MongoDB.Bson.Serialization.Serializers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Interface.Service
 {

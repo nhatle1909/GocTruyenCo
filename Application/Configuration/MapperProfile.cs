@@ -18,7 +18,7 @@ namespace Application.Configuration
             CreateMap<ComicCategory, QueryComicCategoryDTO>().ReverseMap();
             CreateMap<ComicCategory, CommandComicCategoryDTO>().ReverseMap();
             //Comic
-            CreateMap<Comic,QueryComicDTO>().ReverseMap();
+            CreateMap<Comic, QueryComicDTO>().ReverseMap();
             CreateMap<Comic, CommandComicDTO>().ReverseMap();
         }
     }
