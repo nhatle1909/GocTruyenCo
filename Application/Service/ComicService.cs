@@ -29,7 +29,11 @@ namespace Application.Service
                 if (query)
                 {
                     await _unitofwork.CommitAsync();
-                    result.CustomResponse(true, true, "Create comic successfully");
+                    result.CustomResponse(true, true, "Create comic successful");
+                }
+                else
+                {
+                    result.CustomResponse(false, false, "Create comic failed");
                 }
             }
             catch (Exception ex)
@@ -50,7 +54,12 @@ namespace Application.Service
                     query.isDeleted = true;
                     await _unitofwork.GetRepository<Comic>().UpdateItemAsync(id, query);
                     await _unitofwork.CommitAsync();
-                    result.CustomResponse(true, true, "Delete comic successfully");
+                    result.CustomResponse(true, true, "Delete comic successful");
+                }
+                else
+                {
+                    result.CustomResponse(false, false, "Comic not found");
+
                 }
             }
             catch (Exception ex)
@@ -71,7 +80,11 @@ namespace Application.Service
                 if (query != null)
                 {
                     var queryDTO = _mapper.Map<QueryComicDTO>(query);
-                    result.CustomResponse(queryDTO, true, "Retrieve data successfully");
+                    result.CustomResponse(queryDTO, true, "Retrieve data successful");
+                }
+                else
+                {
+                    result.CustomResponse(null, false, "Comic not found");
                 }
             }
             catch (Exception ex)
@@ -91,7 +104,7 @@ namespace Application.Service
 
                 var queryDTO = _mapper.Map<List<QueryComicDTO>>(query);
 
-                if (queryDTO.Count > 0) result.CustomResponse(queryDTO, true, "Retrieve data successfully");
+                if (queryDTO.Count > 0) result.CustomResponse(queryDTO, true, "Retrieve data successful");
 
             }
             catch (Exception ex)
@@ -113,7 +126,11 @@ namespace Application.Service
                 if (query)
                 {
                     await _unitofwork.CommitAsync();
-                    result.CustomResponse(true, true, "Update comic successfully");
+                    result.CustomResponse(true, true, "Update comic successful");
+                }
+                else
+                {
+                    result.CustomResponse(false, false, "Update comic failed");
                 }
             }
             catch (Exception ex)

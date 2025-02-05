@@ -18,7 +18,7 @@ namespace Application.Service
         }
         public async Task<ServiceResponse<string>> SignInAsync(AuthenticateDTO authenticateDTO)
         {
-            ServiceResponse<string> result = new ServiceResponse<string>();
+            ServiceResponse<string> result = new();
 
             string[] loginFields = ["Email", "Password"];
             string[] loginData = [authenticateDTO.Email, authenticateDTO.Password];
@@ -29,7 +29,11 @@ namespace Application.Service
             if (account != null)
             {
                 var token = JWT.GenerateJwtToken(account.Id.ToString(), account.Username, account.Email, account.Role.ToString());
-                result.SuccessRetrieveResponse(token);
+                result.CustomResponse(token,true,"SignIn successful");
+            }
+            else
+            {
+                result.CustomResponse(null, false, "Email or password is incorrect");
             }
             return result;
         }
@@ -45,7 +49,7 @@ namespace Application.Service
         }
         public async Task<ServiceResponse<bool>> SignUpAsync(SignUpDTO signupDTO)
         {
-            ServiceResponse<bool> result = new ServiceResponse<bool>();
+            ServiceResponse<bool> result = new();
             try
             {
                 Account item = _mapper.Map<Account>(signupDTO);
@@ -64,7 +68,7 @@ namespace Application.Service
                 if (command)
                 {
                     await _unitofwork.CommitAsync();
-                    result.CustomResponse(true, true, "Register succesfully");
+                    result.CustomResponse(true, true, "Register successful");
                 }
             }
             catch (Exception ex)

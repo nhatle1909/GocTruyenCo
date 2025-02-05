@@ -23,6 +23,10 @@ namespace Application.Configuration
             services.AddAutoMapper(typeof(MapperProfile));
             //Cloudinary
             services.AddScoped<ICloudinaryService, CloudinaryService>();
+            //ComicChapter
+            services.AddTransient<IComicChapterService, ComicChapterService>();
+            //ComicChapterImage
+            services.AddTransient<IComicChapterImageService, ComicChapterImageService>();
         }
     }
 }

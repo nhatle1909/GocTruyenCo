@@ -22,7 +22,7 @@ namespace Application.Service
         public async Task<ServiceResponse<bool>> UpdateRoleAsync(Guid id, string role)
         {
             {
-                ServiceResponse<bool> result = new ServiceResponse<bool>();
+                ServiceResponse<bool> result = new();
                 try
                 {
                     Account query = await _unitofwork.GetRepository<Account>().GetByIdAsync(id);
@@ -34,7 +34,11 @@ namespace Application.Service
 
                         await _unitofwork.GetRepository<Account>().UpdateItemAsync(id, query);
                         await _unitofwork.CommitAsync();
-                        result.CustomResponse(true, true, "Role Updated Successfully");
+                        result.CustomResponse(true, true, "Role updated successful");
+                    }
+                    else
+                    {
+                        result.CustomResponse(false, false, "Account not found");
                     }
                 }
                 catch (Exception ex)
@@ -48,7 +52,7 @@ namespace Application.Service
         public async Task<ServiceResponse<IEnumerable<QueryAccountDTO>>> GetAllAccountAsync()
         {
 
-            ServiceResponse<IEnumerable<QueryAccountDTO>> result = new ServiceResponse<IEnumerable<QueryAccountDTO>>();
+            ServiceResponse<IEnumerable<QueryAccountDTO>> result = new();
             try
             {
                 var query = await _unitofwork.GetRepository<Account>().GetAllAsync();
@@ -56,7 +60,7 @@ namespace Application.Service
                 if (query != null)
                 {
                     var queryDTO = _mapper.Map<IEnumerable<QueryAccountDTO>>(query);
-                    result.CustomResponse(queryDTO, true, "Success Retrieve Data");
+                    result.CustomResponse(queryDTO, true, "Retrieve data successful");
                 }
             }
             catch (Exception ex)
@@ -69,14 +73,14 @@ namespace Application.Service
         public async Task<ServiceResponse<IEnumerable<QueryAccountDTO>>> GetPagingAsync(SearchDTO searchDTO)
         {
 
-            ServiceResponse<IEnumerable<QueryAccountDTO>> result = new ServiceResponse<IEnumerable<QueryAccountDTO>>();
+            ServiceResponse<IEnumerable<QueryAccountDTO>> result = new();
             try
             {
                 var query = await _unitofwork.GetRepository<Account>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField
                     , searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip);
                 var queryDTO = _mapper.Map<IEnumerable<QueryAccountDTO>>(query);
 
-                result.CustomResponse(queryDTO, true, "Success Retrieve Data");
+                result.CustomResponse(queryDTO, true, "Retrieve data successful");
             }
             catch (Exception ex)
             {
@@ -87,14 +91,14 @@ namespace Application.Service
 
         public async Task<ServiceResponse<QueryAccountDTO>> GetByIdAsync(Guid id)
         {
-            ServiceResponse<QueryAccountDTO> result = new ServiceResponse<QueryAccountDTO>();
+            ServiceResponse<QueryAccountDTO> result = new();
             try
             {
                 Account item = await _unitofwork.GetRepository<Account>().GetByIdAsync(id);
                 if (item != null)
                 {
                     var itemDTO = _mapper.Map<QueryAccountDTO>(item);
-                    result.CustomResponse(itemDTO, true, "Success Retrieve Data");
+                    result.CustomResponse(itemDTO, true, "Retrieve data successful");
                 }
             }
             catch (Exception ex)
@@ -106,7 +110,7 @@ namespace Application.Service
 
         public async Task<ServiceResponse<bool>> UpdateAccountAsync(Guid accountId, CommandAccountDTO commandAccountDTO)
         {
-            ServiceResponse<bool> result = new ServiceResponse<bool>();
+            ServiceResponse<bool> result = new();
             try
             {
                 Account item = _mapper.Map<Account>(commandAccountDTO);
@@ -115,7 +119,11 @@ namespace Application.Service
                 if (query)
                 {
                     await _unitofwork.CommitAsync();
-                    result.CustomResponse(true, true, "Data Updated Successfully");
+                    result.CustomResponse(true, true, "Data updated successful");
+                }
+                else
+                {
+                    result.CustomResponse(false, false, "Data updated fail");
                 }
             }
             catch (Exception ex)
@@ -128,7 +136,7 @@ namespace Application.Service
         public async Task<ServiceResponse<bool>> RestrictAccountAsync(Guid id)
         {
             {
-                ServiceResponse<bool> result = new ServiceResponse<bool>();
+                ServiceResponse<bool> result = new();
 
                 Account query = await _unitofwork.GetRepository<Account>().GetByIdAsync(id);
                 if (query != null)
@@ -136,7 +144,11 @@ namespace Application.Service
                     query.isRestricted = true;
                     await _unitofwork.GetRepository<Account>().UpdateItemAsync(id, query);
                     await _unitofwork.CommitAsync();
-                    result.CustomResponse(true, true, "Restrict Account Successfully");
+                    result.CustomResponse(true, true, "Restrict account successful");
+                }
+                else
+                {
+                    result.CustomResponse(false, false, "Account not found");
                 }
                 return result;
             }

@@ -13,25 +13,25 @@ namespace Controller.Controllers
             _cloudinaryService = cloudinaryService;
         }
 
-        [HttpPost("Theme")]
-        public async Task<IActionResult> UploadThemeUrl(IFormFile imageFile)
+        [HttpPost("{comicName}")]
+        public async Task<IActionResult> UploadThemeUrl(string comicName,IFormFile imageFile)
         {
-            var response = await _cloudinaryService.UploadThemeUrl("imageDTO.ComicName", imageFile);
-            if (response.Success)
+            var response = await _cloudinaryService.UploadThemeUrl(comicName, imageFile);
+            if (!response.Success)
             {
-                return Ok(response);
+                return BadRequest(response);
             }
-            return BadRequest(response);
+            return Ok(response);
         }
-        [HttpPost("Chapter")]
+        [HttpPost("{comicName},{chapterNumber}")]
         public async Task<IActionResult> UploadChapterImage(string comicName, string chapterNumber, List<IFormFile> imageURIs)
         {
             var response = await _cloudinaryService.UploadChapterImage(comicName, chapterNumber, imageURIs);
-            if (response.Success)
+            if (!response.Success)
             {
-                return Ok(response);
+                return BadRequest(response);
             }
-            return BadRequest(response);
+            return Ok(response);
         }
     }
 }

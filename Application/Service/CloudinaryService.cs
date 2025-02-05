@@ -19,7 +19,7 @@ namespace Application.Service
             try
             {
                 var result = await _unitofwork.CloudinaryRepository.UploadChapterImageAsync(comicName, chapterNumber, imageURIs);
-                response.CustomResponse(result, true, "Upload Images Successfully");
+                response.CustomResponse(result, true, "Upload images successful");
             }
             catch (Exception ex)
             {
@@ -35,7 +35,7 @@ namespace Application.Service
             {
                 var result = await _unitofwork.CloudinaryRepository.UploadComicThemeAsync(comicName, image);
 
-                response.CustomResponse(result, true, "Upload Theme Successfully");
+                response.CustomResponse(result, true, "Upload theme successful");
             }
             catch (Exception ex)
             {

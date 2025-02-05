@@ -18,7 +18,7 @@ namespace Application.Service
         }
         public async Task<ServiceResponse<bool>> CreateComicCategoryAsync(CommandComicCategoryDTO createComicCategoryDTO)
         {
-            ServiceResponse<bool> result = new ServiceResponse<bool>();
+            ServiceResponse<bool> result = new();
             try
             {
                 var newComicCategory = _mapper.Map<ComicCategory>(createComicCategoryDTO);
@@ -28,7 +28,11 @@ namespace Application.Service
                 if (command)
                 {
                     await _unitofwork.CommitAsync();
-                    result.CustomResponse(true, true, "Create comic category successfully");
+                    result.CustomResponse(true, true, "Create comic category successful");
+                }
+                else
+                {
+                    result.CustomResponse(false, false, "Create comic category failed");
                 }
             }
             catch (Exception ex)
@@ -40,7 +44,7 @@ namespace Application.Service
 
         public async Task<ServiceResponse<bool>> DeleteComicCategoryAsync(Guid id)
         {
-            ServiceResponse<bool> result = new ServiceResponse<bool>();
+            ServiceResponse<bool> result = new();
             try
             {
                 var query = await _unitofwork.GetRepository<ComicCategory>().GetByIdAsync(id);
@@ -49,7 +53,11 @@ namespace Application.Service
                     query.isDeleted = true;
                     await _unitofwork.GetRepository<ComicCategory>().UpdateItemAsync(id, query);
                     await _unitofwork.CommitAsync();
-                    result.CustomResponse(true, true, "Delete comic category successfully");
+                    result.CustomResponse(true, true, "Delete comic category successful");
+                }
+                else
+                {
+                    result.CustomResponse(false, false, "Comic category not found");
                 }
             }
             catch (Exception ex)
@@ -61,14 +69,14 @@ namespace Application.Service
 
         public async Task<ServiceResponse<List<QueryComicCategoryDTO>>> GetComicCategoriesAsync(bool isHentai)
         {
-            ServiceResponse<List<QueryComicCategoryDTO>> result = new ServiceResponse<List<QueryComicCategoryDTO>>();
+            ServiceResponse<List<QueryComicCategoryDTO>> result = new();
             try
             {
                 var query = await _unitofwork.GetRepository<ComicCategory>().GetAllAsync();
                 if (query != null)
                 {
                     var queryDTO = _mapper.Map<List<QueryComicCategoryDTO>>(query);
-                    result.CustomResponse(queryDTO, true, "Retrieve data successfully");
+                    result.CustomResponse(queryDTO, true, "Retrieve data successful");
                 }
             }
             catch (Exception ex)
@@ -80,7 +88,7 @@ namespace Application.Service
 
         public async Task<ServiceResponse<bool>> UpdateComicCategoryAsync(Guid comicCategoryId, CommandComicCategoryDTO updateComicCategoryDTO)
         {
-            ServiceResponse<bool> result = new ServiceResponse<bool>();
+            ServiceResponse<bool> result = new();
             try
             {
                 var newComicCategory = _mapper.Map<ComicCategory>(updateComicCategoryDTO);
@@ -90,7 +98,11 @@ namespace Application.Service
                 if (query)
                 {
                     await _unitofwork.CommitAsync();
-                    result.CustomResponse(true, true, "Update comic category successfully");
+                    result.CustomResponse(true, true, "Update comic category successful");
+                }
+                else
+                {
+                    result.CustomResponse(false, false, "Update comic category failed");
                 }
             }
             catch (Exception ex)
