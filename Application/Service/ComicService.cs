@@ -51,16 +51,14 @@ namespace Application.Service
                 var query = await _unitofwork.GetRepository<Comic>().GetByIdAsync(id);
                 if (query != null)
                 {
-                    query.isDeleted = true;
-                    await _unitofwork.GetRepository<Comic>().UpdateItemAsync(id, query);
-                    await _unitofwork.CommitAsync();
-                    result.CustomResponse(true, true, "Delete comic successful");
-                }
-                else
-                {
                     result.CustomResponse(false, false, "Comic not found");
-
+                    
                 }
+               
+                query.isDeleted = true;
+                await _unitofwork.GetRepository<Comic>().UpdateItemAsync(id, query);
+                await _unitofwork.CommitAsync();
+                result.CustomResponse(true, true, "Delete comic successful");
             }
             catch (Exception ex)
             {
@@ -77,15 +75,12 @@ namespace Application.Service
             {
                 var query = await _unitofwork.GetRepository<Comic>().GetByIdAsync(id);
 
-                if (query != null)
-                {
-                    var queryDTO = _mapper.Map<QueryComicDTO>(query);
-                    result.CustomResponse(queryDTO, true, "Retrieve data successful");
-                }
-                else
+                if (query == null)
                 {
                     result.CustomResponse(null, false, "Comic not found");
                 }
+                var queryDTO = _mapper.Map<QueryComicDTO>(query);
+                result.CustomResponse(queryDTO, true, "Retrieve data successful");
             }
             catch (Exception ex)
             {
@@ -104,7 +99,7 @@ namespace Application.Service
 
                 var queryDTO = _mapper.Map<List<QueryComicDTO>>(query);
 
-                if (queryDTO.Count > 0) result.CustomResponse(queryDTO, true, "Retrieve data successful");
+                result.CustomResponse(queryDTO, true, "Retrieve data successful");
 
             }
             catch (Exception ex)

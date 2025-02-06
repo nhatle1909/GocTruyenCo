@@ -1,4 +1,5 @@
 ﻿using Application.Interface.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Controller.Controllers
@@ -12,7 +13,7 @@ namespace Controller.Controllers
         {
             _cloudinaryService = cloudinaryService;
         }
-
+        [Authorize(Roles= "Admin,Uploader")]
         [HttpPost("{comicName}")]
         public async Task<IActionResult> UploadThemeUrl(string comicName,IFormFile imageFile)
         {

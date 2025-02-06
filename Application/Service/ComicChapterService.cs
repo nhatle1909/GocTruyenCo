@@ -53,11 +53,10 @@ namespace Application.Service
                 string[] searchField = ["ComicId"];
                 string[] searchValue = [comicId.ToString()];
                 var query = await _unitofwork.GetRepository<ComicChapter>().GetAllByFilterAsync(searchField, searchValue);
-                if (query != null)
-                {
-                    var data = _mapper.Map<QueryComicChapterDTO>(query);
-                    result.CustomResponse(data, true, "Get all chapter successful");
-                }
+                
+                var data = _mapper.Map<QueryComicChapterDTO>(query);
+                result.CustomResponse(data, true, "Get all chapter successful");
+                
             }
             catch (Exception ex)
             {
@@ -74,11 +73,10 @@ namespace Application.Service
                
                 var query = await _unitofwork.GetRepository<ComicChapter>().PagingAsync(searchDTO.searchFields,searchDTO.searchValues,searchDTO.sortField,
                                                                                         searchDTO.sortAscending,searchDTO.pageSize,searchDTO.skip);
-                if (query != null)
-                {
-                    var data = _mapper.Map<QueryComicChapterDTO>(query);
-                    result.CustomResponse(data, true, "Get all chapter successful");
-                }
+             
+                var data = _mapper.Map<QueryComicChapterDTO>(query);
+                result.CustomResponse(data, true, "Get all chapter successful");
+                
             }
             catch (Exception ex)
             {
@@ -103,10 +101,10 @@ namespace Application.Service
                         await _unitofwork.CommitAsync();
                         result.CustomResponse(true, true, "Update chapter successful");
                     }
-                    //else
-                    //{
-                    //    result.CustomResponse(false, false, "Update chapter failed");
-                    //}
+                    else
+                    {
+                        result.CustomResponse(false, false, "Update chapter failed");
+                    }
                 }
                 else
                 {

@@ -11,6 +11,7 @@ namespace Application.Service
     {
         private readonly IUnitofwork _unitofwork;
         private readonly IMapper _mapper;
+        private readonly string[] emailField = ["Email"];
         public AuthenticateService(IUnitofwork unitofwork, IMapper mapper)
         {
             _unitofwork = unitofwork;
@@ -20,21 +21,26 @@ namespace Application.Service
         {
             ServiceResponse<string> result = new();
 
-            string[] loginFields = ["Email", "Password"];
-            string[] loginData = [authenticateDTO.Email, authenticateDTO.Password];
+         
+            string[] loginData = [authenticateDTO.Email];
 
-            var query = await _unitofwork.GetRepository<Account>().GetAllByFilterAsync(loginFields, loginData);
+            var query = await _unitofwork.GetRepository<Account>().GetAllByFilterAsync(emailField, loginData);
             var account = query.FirstOrDefault();
 
-            if (account != null)
+            if (account == null)
             {
-                var token = JWT.GenerateJwtToken(account.Id.ToString(), account.Username, account.Email, account.Role.ToString());
-                result.CustomResponse(token,true,"SignIn successful");
+                result.CustomResponse("", false, "Account not found");
+                return result;
             }
-            else
+            
+            if (account.Password != authenticateDTO.Password)
             {
-                result.CustomResponse(null, false, "Email or password is incorrect");
+                result.CustomResponse("", false, "Password is incorrect");
+                return result;
             }
+
+            var token = JWT.GenerateJwtToken(account.Id.ToString(), account.Username, account.Email, account.Role.ToString());
+            result.CustomResponse(token, true, "SignIn successful");
             return result;
         }
 
@@ -53,9 +59,10 @@ namespace Application.Service
             try
             {
                 Account item = _mapper.Map<Account>(signupDTO);
-                string[] email = ["Email"];
+      
                 string[] emailValue = [signupDTO.Email];
-                var query = await _unitofwork.GetRepository<Account>().GetAllByFilterAsync(email, emailValue);
+
+                var query = await _unitofwork.GetRepository<Account>().GetAllByFilterAsync(emailField, emailValue);
 
                 if (query.Count() > 0)
                 {

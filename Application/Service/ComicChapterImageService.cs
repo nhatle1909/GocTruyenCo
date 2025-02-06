@@ -48,17 +48,16 @@ namespace Application.Service
             try
             {
                 var query = await _unitofwork.GetRepository<ComicChapterImage>().GetByIdAsync(id);
-                if (query != null)
-                {
-                    query.isDeleted = true;
-                    await _unitofwork.GetRepository<ComicChapterImage>().UpdateItemAsync(id, query);
-                    await _unitofwork.CommitAsync();
-                    result.CustomResponse(true, true, "Delete chapter image successfully");
-                }
-                else
+                if (query == null)
                 {
                     result.CustomResponse(false, false, "Chapter image not found");
                 }
+                
+                query.isDeleted = true;
+                await _unitofwork.GetRepository<ComicChapterImage>().UpdateItemAsync(id, query);
+                await _unitofwork.CommitAsync();
+
+                result.CustomResponse(true, true, "Delete chapter image successfully");
             }
             catch (Exception ex)
             {
@@ -75,11 +74,10 @@ namespace Application.Service
                 string[] searchField = ["ComicChapterId"];
                 string[] searchValue = [comicChapterId.ToString()];
                 var query = await _unitofwork.GetRepository<ComicChapterImage>().GetAllByFilterAsync(searchField, searchValue);
-                if (query != null)
-                {
-                    var data = _mapper.Map<IEnumerable<QueryAccountDTO>>(query);
-                    result.CustomResponse(data, true, "Get all chapter image successfully");
-                }
+              
+                var data = _mapper.Map<IEnumerable<QueryAccountDTO>>(query);
+                result.CustomResponse(data, true, "Get all chapter image successfully");
+                
             }
             catch (Exception ex)
             {
@@ -96,16 +94,14 @@ namespace Application.Service
                 foreach (var item in updateChapterImageDTO)
                 {
                     var query = await _unitofwork.GetRepository<ComicChapterImage>().GetByIdAsync(item.Id);
-                    if (query != null)
-                    {
-                        var comicChapterImage = _mapper.Map<ComicChapterImage>(updateChapterImageDTO);
-                        bool command = await _unitofwork.GetRepository<ComicChapterImage>().UpdateItemAsync(item.Id, comicChapterImage);
-                    }
-                    else
+                    if (query == null)
                     {
                         result.CustomResponse(false, false, "Chapter image with id " + item + " not found");
                         return result;
+                      
                     }
+                    var comicChapterImage = _mapper.Map<ComicChapterImage>(updateChapterImageDTO);
+                    bool command = await _unitofwork.GetRepository<ComicChapterImage>().UpdateItemAsync(item.Id, comicChapterImage);
                 }
                 await _unitofwork.CommitAsync();
                 result.CustomResponse(false, false, "Update chapter image success");

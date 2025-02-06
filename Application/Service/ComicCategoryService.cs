@@ -48,17 +48,17 @@ namespace Application.Service
             try
             {
                 var query = await _unitofwork.GetRepository<ComicCategory>().GetByIdAsync(id);
-                if (query != null)
-                {
-                    query.isDeleted = true;
-                    await _unitofwork.GetRepository<ComicCategory>().UpdateItemAsync(id, query);
-                    await _unitofwork.CommitAsync();
-                    result.CustomResponse(true, true, "Delete comic category successful");
-                }
-                else
+                if (query == null)
                 {
                     result.CustomResponse(false, false, "Comic category not found");
+                    return result;
                 }
+             
+                query.isDeleted = true;
+                await _unitofwork.GetRepository<ComicCategory>().UpdateItemAsync(id, query);
+                await _unitofwork.CommitAsync();
+
+                result.CustomResponse(true, true, "Delete comic category successful");
             }
             catch (Exception ex)
             {
@@ -73,11 +73,10 @@ namespace Application.Service
             try
             {
                 var query = await _unitofwork.GetRepository<ComicCategory>().GetAllAsync();
-                if (query != null)
-                {
-                    var queryDTO = _mapper.Map<List<QueryComicCategoryDTO>>(query);
-                    result.CustomResponse(queryDTO, true, "Retrieve data successful");
-                }
+                
+                var queryDTO = _mapper.Map<List<QueryComicCategoryDTO>>(query);
+                result.CustomResponse(queryDTO, true, "Retrieve data successful");
+                
             }
             catch (Exception ex)
             {

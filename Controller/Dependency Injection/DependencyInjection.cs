@@ -4,6 +4,9 @@ using Controller.FluentValidation;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Infrastructure.Configuration;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Controller.Dependency_Injection
 {
@@ -51,8 +54,23 @@ namespace Controller.Dependency_Injection
             {
                 loggingBuilder.AddConsole();
             });
+            
             //Authentication & Authorization
-            services.AddAuthentication();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddCookie()
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(.GetConfiguration["JWT:Key"] ?? throw new ArgumentNullException("builder.Configuration[\"Jwt:Key\"]", "Jwt:Key is null"))),
+                    ValidIssuer = .Configuration["JWT:Issure"],
+                    ValidAudience = builder.Configuration["JWT:Audience"],
+                    ClockSkew = TimeSpan.Zero
+                };
+            }); ;
             services.AddAuthorization();
 
             //Controller

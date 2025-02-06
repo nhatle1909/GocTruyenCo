@@ -1,5 +1,6 @@
 using Application.DTO;
 using Application.Interface.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace Controller.Controllers
 {
@@ -33,6 +34,7 @@ namespace Controller.Controllers
             }
             return Ok(query);
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost("{accountId}")]
         public async Task<IActionResult> UpdateRole(Guid accountId, string role)
         {
@@ -54,6 +56,7 @@ namespace Controller.Controllers
             }
             return Ok(query);
         }
+        [Authorize(Roles= "Admin")]
         [HttpDelete("{accountid}")]
         public async Task<IActionResult> Restrict(Guid accountId)
         {
