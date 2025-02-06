@@ -28,7 +28,7 @@ namespace Controller.Dependency_Injection
             //Account
             services.AddTransient<IValidator<CommandAccountDTO>, CommandAccountDTOValidation>();
         }
-        public static void AddSettings(this IServiceCollection services)
+        public static void AddSettings(this IServiceCollection services,IConfiguration configuration)
         {
             //CORS
             services.AddCors(options =>
@@ -65,9 +65,9 @@ namespace Controller.Dependency_Injection
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(.GetConfiguration["JWT:Key"] ?? throw new ArgumentNullException("builder.Configuration[\"Jwt:Key\"]", "Jwt:Key is null"))),
-                    ValidIssuer = .Configuration["JWT:Issure"],
-                    ValidAudience = builder.Configuration["JWT:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("JWT:secretkey").Value ?? throw new ArgumentNullException("builder.Configuration[\"Jwt:secretkey\"]", "Jwt:secretkey is null"))),
+                    ValidIssuer = configuration.GetRequiredSection("JWT:issuer").Value,
+                    ValidAudience = configuration.GetRequiredSection("JWT:audience").Value,
                     ClockSkew = TimeSpan.Zero
                 };
             }); ;

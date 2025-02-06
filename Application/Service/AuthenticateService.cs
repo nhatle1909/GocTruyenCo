@@ -4,6 +4,7 @@ using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entities;
+using Microsoft.Extensions.Configuration;
 
 namespace Application.Service
 {
@@ -12,10 +13,14 @@ namespace Application.Service
         private readonly IUnitofwork _unitofwork;
         private readonly IMapper _mapper;
         private readonly string[] emailField = ["Email"];
-        public AuthenticateService(IUnitofwork unitofwork, IMapper mapper)
+        private readonly IConfiguration _configuration;
+        private readonly JWT _jwt;
+        public AuthenticateService(IUnitofwork unitofwork, IMapper mapper,IConfiguration configuration)
         {
             _unitofwork = unitofwork;
             _mapper = mapper;
+            _configuration = configuration;
+            _jwt = new JWT(_configuration);
         }
         public async Task<ServiceResponse<string>> SignInAsync(AuthenticateDTO authenticateDTO)
         {
@@ -39,7 +44,7 @@ namespace Application.Service
                 return result;
             }
 
-            var token = JWT.GenerateJwtToken(account.Id.ToString(), account.Username, account.Email, account.Role.ToString());
+            var token = _jwt.GenerateJwtToken(account.Id.ToString(), account.Username, account.Email, account.Role.ToString());
             result.CustomResponse(token, true, "SignIn successful");
             return result;
         }

@@ -1,7 +1,7 @@
-﻿using Application.Interface.Service;
+﻿using Application.Common;
+using Application.Interface.Service;
 using Application.Service;
-
-
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Configuration

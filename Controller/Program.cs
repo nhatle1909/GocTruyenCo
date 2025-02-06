@@ -13,7 +13,7 @@ namespace Controller
             // Add services to the container.
             builder.Services.AddInfrastructure();
             builder.Services.AddService();
-            builder.Services.AddSettings();
+            builder.Services.AddSettings(builder.Configuration);
             builder.Services.AddValidation();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

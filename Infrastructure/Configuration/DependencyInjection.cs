@@ -29,6 +29,7 @@ namespace Infrastructure.Configuration
             services.AddSingleton(services => new Cloudinary(new Account(services.GetRequiredService<IConfiguration>()["Cloudinary:CloudName"],
                                                                          services.GetRequiredService<IConfiguration>()["Cloudinary:ApiKey"],
                                                                          services.GetRequiredService<IConfiguration>()["Cloudinary:ApiSecret"])));
+           
         }
     }
 }
