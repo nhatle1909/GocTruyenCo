@@ -28,15 +28,13 @@ namespace Application.Service
             {
                 var comicChapter = _mapper.Map<ComicChapter>(commandComicChapterDTO);
                 bool command = await _unitofwork.GetRepository<ComicChapter>().AddOneItemAsync(comicChapter);
-                if (command)
-                {
-                    await _unitofwork.CommitAsync();
-                    result.CustomResponse(true, true, "Create chapter successful");
-                }
-                else
+                if (!command)
                 {
                     result.CustomResponse(false, false, "Create chapter failed");
+                    return result;
                 }
+                await _unitofwork.CommitAsync();
+                result.CustomResponse(true, true, "Create chapter successful");
             }
             catch (Exception ex)
             {
@@ -96,15 +94,14 @@ namespace Application.Service
                     var comicChapter = _mapper.Map<ComicChapter>(commandComicChapterDTO);
  
                     bool command = await _unitofwork.GetRepository<ComicChapter>().UpdateItemAsync(chapterId, comicChapter);
-                    if (command)
-                    {
-                        await _unitofwork.CommitAsync();
-                        result.CustomResponse(true, true, "Update chapter successful");
-                    }
-                    else
+                    if (!command)
                     {
                         result.CustomResponse(false, false, "Update chapter failed");
+                        return result;
+                      
                     }
+                    await _unitofwork.CommitAsync();
+                    result.CustomResponse(true, true, "Update chapter successful");
                 }
                 else
                 {

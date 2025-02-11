@@ -27,6 +27,8 @@ namespace Application.Configuration
             services.AddTransient<IComicChapterService, ComicChapterService>();
             //ComicChapterImage
             services.AddTransient<IComicChapterImageService, ComicChapterImageService>();
+            //ComicChapterComment
+            services.AddTransient<IComicChapterCommentService, ComicChapterCommentService>();
         }
     }
 }

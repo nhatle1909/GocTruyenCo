@@ -115,15 +115,14 @@ namespace Application.Service
                 Account item = _mapper.Map<Account>(commandAccountDTO);
 
                 bool query = await _unitofwork.GetRepository<Account>().UpdateItemAsync(accountId, item);
-                if (query)
-                {
-                    await _unitofwork.CommitAsync();
-                    result.CustomResponse(true, true, "Data updated successful");
-                }
-                else
+                if (!query)
                 {
                     result.CustomResponse(false, false, "Data updated fail");
-                }
+                    return result;
+                }                                
+               
+                await _unitofwork.CommitAsync();
+                result.CustomResponse(true, true, "Data updated successful");
             }
             catch (Exception ex)
             {

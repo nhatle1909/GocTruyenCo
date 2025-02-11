@@ -5,7 +5,7 @@ namespace Domain.Entities
 {
     public class ComicChapter : BaseEntity
     {
-        [BsonElement] public required Guid ComicId { get; set; }
+        [BsonElement][BsonRepresentation(BsonType.String)] public required Guid ComicId { get; set; }
         [BsonElement] public required string Name { get; set; }
 
     }

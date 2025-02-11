@@ -5,7 +5,9 @@ namespace Domain.Entities
 {
     public class Bookmark : BaseEntity
     {
-        [BsonElement] public required Guid AccountId { get; set; }
+        [BsonElement][BsonRepresentation(BsonType.String)] public required Guid AccountId { get; set; }
         [BsonElement] public required Guid ComicId { get; set; }
+
+        [BsonIgnoreIfNull] public string ComicName { get; set; }
     }
 }

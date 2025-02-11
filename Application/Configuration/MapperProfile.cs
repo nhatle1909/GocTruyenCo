@@ -26,7 +26,9 @@ namespace Application.Configuration
             //ComicChapterImage
             CreateMap<ComicChapterImage, QueryComicChapterImageDTO>().ReverseMap();
             CreateMap<ComicChapterImage, CommandComicChapterImageDTO>().ReverseMap();
-            
+            //ComicChapterComment
+            CreateMap<ComicChapterComment, QueryComicChapterCommentDTO>().ReverseMap();
+            CreateMap<ComicChapterComment, CommandComicChapterCommentDTO>().ReverseMap();
         }
     }
 }

@@ -16,6 +16,7 @@ namespace Application.Aggregation
                             { "foreignField", "_id" },
                             { "as", "CategoryId" }
                         });
+          
                 BsonDocument projectPipeline = new BsonDocument("$project",
                     new BsonDocument
                         {
@@ -23,7 +24,7 @@ namespace Application.Aggregation
                             { "isDeleted", "$isDeleted" },
                             { "CreatedDate", "$CreatedDate" },
                             { "UploaderId", "$UploaderId" },
-                            { "Category", "$CategoryId.Name" },
+                            { "CategoryName", "$CategoryId.Name" },
                             { "Name", "$Name" },
                             { "Description", "$Description" },
                             { "ThemeURL", "$ThemeURL" },

@@ -5,7 +5,7 @@ namespace Domain.Entities
 {
     public class ComicChapterImage : BaseEntity
     {
-        [BsonElement] public required Guid ComicChapterId { get; set; }
+        [BsonElement][BsonRepresentation(BsonType.String)] public required Guid ComicChapterId { get; set; }
         [BsonElement] public required string ImageURL { get; set; }
     }
 }

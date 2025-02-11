@@ -21,20 +21,20 @@ namespace Application.Service
         {
             ServiceResponse<bool> result = new();
 
-            var comic = _mapper.Map<Comic>(comicDTO);
+           
             try
             {
-                var query = await _unitofwork.GetRepository<Comic>().AddOneItemAsync(comic);
+                var comic = _mapper.Map<Comic>(comicDTO);
+                var command = await _unitofwork.GetRepository<Comic>().AddOneItemAsync(comic);
 
-                if (query)
-                {
-                    await _unitofwork.CommitAsync();
-                    result.CustomResponse(true, true, "Create comic successful");
-                }
-                else
+                if (!command)
                 {
                     result.CustomResponse(false, false, "Create comic failed");
+                    return result;
+           
                 }
+                await _unitofwork.CommitAsync();
+                result.CustomResponse(true, true, "Create comic successful");
             }
             catch (Exception ex)
             {
@@ -104,7 +104,7 @@ namespace Application.Service
             }
             catch (Exception ex)
             {
-                result.TryCatchResponse(ex);
+                throw new Exception(ex.Message);
             }
             return result;
         }
@@ -116,17 +116,15 @@ namespace Application.Service
             {
                 var comic = _mapper.Map<Comic>(comicDTO);
 
-                var query = await _unitofwork.GetRepository<Comic>().UpdateItemAsync(id, comic);
+                var command = await _unitofwork.GetRepository<Comic>().UpdateItemAsync(id, comic);
 
-                if (query)
-                {
-                    await _unitofwork.CommitAsync();
-                    result.CustomResponse(true, true, "Update comic successful");
-                }
-                else
+                if (!command)
                 {
                     result.CustomResponse(false, false, "Update comic failed");
+                    return result;
                 }
+                await _unitofwork.CommitAsync();
+                result.CustomResponse(true, true, "Update comic successful");
             }
             catch (Exception ex)
             {

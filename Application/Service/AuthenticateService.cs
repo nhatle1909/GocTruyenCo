@@ -44,7 +44,7 @@ namespace Application.Service
                 return result;
             }
 
-            var token = _jwt.GenerateJwtToken(account.Id.ToString(), account.Username, account.Email, account.Role.ToString());
+            var token = _jwt.GenerateJwtToken(account.Id.ToString(), account.Role.ToString(), account.Username, account.Email);
             result.CustomResponse(token, true, "SignIn successful");
             return result;
         }

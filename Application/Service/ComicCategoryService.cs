@@ -25,15 +25,14 @@ namespace Application.Service
 
                 var command = await _unitofwork.GetRepository<ComicCategory>().AddOneItemAsync(newComicCategory);
 
-                if (command)
-                {
-                    await _unitofwork.CommitAsync();
-                    result.CustomResponse(true, true, "Create comic category successful");
-                }
-                else
+                if (!command)
                 {
                     result.CustomResponse(false, false, "Create comic category failed");
+                    return result;
                 }
+             
+                await _unitofwork.CommitAsync();
+                result.CustomResponse(true, true, "Create comic category successful");
             }
             catch (Exception ex)
             {
@@ -92,17 +91,16 @@ namespace Application.Service
             {
                 var newComicCategory = _mapper.Map<ComicCategory>(updateComicCategoryDTO);
 
-                var query = await _unitofwork.GetRepository<ComicCategory>().UpdateItemAsync(comicCategoryId, newComicCategory);
+                var command = await _unitofwork.GetRepository<ComicCategory>().UpdateItemAsync(comicCategoryId, newComicCategory);
 
-                if (query)
-                {
-                    await _unitofwork.CommitAsync();
-                    result.CustomResponse(true, true, "Update comic category successful");
-                }
-                else
+                if (!command)
                 {
                     result.CustomResponse(false, false, "Update comic category failed");
+                    return result;
                 }
+                  
+                await _unitofwork.CommitAsync();
+                result.CustomResponse(true, true, "Update comic category successful");
             }
             catch (Exception ex)
             {

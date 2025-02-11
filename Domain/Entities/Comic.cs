@@ -4,6 +4,7 @@ using static Domain.Enums.ComicStatusEnum;
 
 namespace Domain.Entities
 {
+    
     public class Comic : BaseEntity
     {
         [BsonElement][BsonRepresentation(BsonType.String)] public required Guid UploaderId { get; set; }
@@ -15,6 +16,7 @@ namespace Domain.Entities
         [BsonElement] public required ComicStatus Status { get; set; }
 
         //Only Deserializing field
-        [BsonElement][BsonIgnore] public required List<string> Category { get; set; }
+        [BsonIgnoreIfNull]public required List<string> CategoryName { get; set; }
+        
     }
 }
