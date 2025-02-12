@@ -113,7 +113,7 @@ namespace Application.Service
             try
             {
                 Account item = _mapper.Map<Account>(commandAccountDTO);
-
+                item.Id = accountId;
                 bool query = await _unitofwork.GetRepository<Account>().UpdateItemAsync(accountId, item);
                 if (!query)
                 {

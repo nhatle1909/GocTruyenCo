@@ -104,17 +104,8 @@ namespace Infrastructure
 
         public async Task<IEnumerable<T>> PagingAsync(string[] searchFields, string[] searchValue, string sortField, bool isAsc, int pageSize, int skip, BsonDocument[] aggregates = null)
         {
-            string postcacheKey = CacheKeyUtils.GenerateCacheKey(searchFields, searchValue, sortField, isAsc, pageSize, skip);
-            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(1));
+        
             IAggregateFluent<T> query;
-
-            //Pretend to remove this cache value from memory when Create / Update / Remove , but it's so hard to find an effective way to do that
-            //So this cache value will be removed after 1 minute, it may be not a big deal
-            //Check cache
-            if (_memoryCache.TryGetValue(cacheKey + postcacheKey, out query))
-            {
-                return await query.ToListAsync();
-            }
 
             //Create Filter
             FilterDefinition<T> filterDefinition = Builders<T>.Filter.Empty;
@@ -143,10 +134,7 @@ namespace Infrastructure
                          .Skip((skip - 1) * pageSize);
            
             var result = await query.ToListAsync();
-            
-            //Add to cache
-            _memoryCache.Set(cacheKey + postcacheKey, result, cacheEntryOptions);
-            keyValuePairs.Add(cacheKey + postcacheKey);
+        
             return result;
         }   //Finish
 
@@ -173,15 +161,16 @@ namespace Infrastructure
             {
                 string IdString = id.ToString();
                 var filter = Builders<T>.Filter.Eq("_id", IdString);
+                var updateDefinition = Builders<T>.Update.Set(T => T,replacement);    
                 await _collection.ReplaceOneAsync(filter, replacement);
                 RemoveCache(IdString);
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                throw new Exception(ex.Message);
             }
-
+            return false;
         } //Finish
 
        

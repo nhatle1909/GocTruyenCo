@@ -25,9 +25,9 @@ namespace Controller.Controllers
             return Ok(query);
         }
         [HttpPut("{comicId}")]
-        public async Task<IActionResult> UpdateComicAsync(Guid id, CommandComicDTO comicDTO)
+        public async Task<IActionResult> UpdateComicAsync(Guid comicId, CommandComicDTO comicDTO)
         {
-            var query = await _comicService.UpdateComicAsync(id, comicDTO);
+            var query = await _comicService.UpdateComicAsync(comicId, comicDTO);
             if (!query.Success)
             {
                 return BadRequest(query);
@@ -35,9 +35,9 @@ namespace Controller.Controllers
             return Ok(query);
         }
         [HttpDelete("{comicId}")]
-        public async Task<IActionResult> DeleteComicAsync(Guid id)
+        public async Task<IActionResult> DeleteComicAsync(Guid comicId)
         {
-            var query = await _comicService.DeleteComicAsync(id);
+            var query = await _comicService.DeleteComicAsync(comicId);
             if (!query.Success)
             {
                 return BadRequest(query);
@@ -45,9 +45,9 @@ namespace Controller.Controllers
             return Ok(query);
         }
         [HttpGet("{comicId}")]
-        public async Task<IActionResult> GetComicAsync(Guid id)
+        public async Task<IActionResult> GetComicAsync(Guid comicId)
         {
-            var query = await _comicService.GetComicAsync(id);
+            var query = await _comicService.GetComicAsync(comicId);
             if (!query.Success)
             {
                 return BadRequest(query);

@@ -35,7 +35,7 @@ namespace Controller.Controllers
             return Ok(query);
         }
         [Authorize(Roles = "Admin")]
-        [HttpPost("{accountId}")]
+        [HttpPut("/Role/{accountId}")]
         public async Task<IActionResult> UpdateRole(Guid accountId, string role)
         {
             var query = await _accountService.UpdateRoleAsync(accountId, role);

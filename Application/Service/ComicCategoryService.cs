@@ -90,7 +90,7 @@ namespace Application.Service
             try
             {
                 var newComicCategory = _mapper.Map<ComicCategory>(updateComicCategoryDTO);
-
+                newComicCategory.Id = comicCategoryId;
                 var command = await _unitofwork.GetRepository<ComicCategory>().UpdateItemAsync(comicCategoryId, newComicCategory);
 
                 if (!command)

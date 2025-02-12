@@ -11,6 +11,6 @@ namespace Application.Interface.Service
     public interface IComicChapterCommentService
     {
         Task<ServiceResponse<bool>> CreateNewComment (CommandComicChapterCommentDTO commandComicChapterCommentDTO);
-        Task<ServiceResponse<QueryComicChapterCommentDTO>> GetPagingAsync(SearchDTO searchDTO);
+        Task<ServiceResponse<IEnumerable<QueryComicChapterCommentDTO>>> GetPagingAsync(SearchDTO searchDTO);
     }
 }

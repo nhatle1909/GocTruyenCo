@@ -16,14 +16,21 @@ namespace Application.Aggregation
                             { "foreignField", "_id" },
                             { "as", "CategoryId" }
                         });
-          
+                BsonDocument lookupPipeline2 = new BsonDocument("$lookup",
+                   new BsonDocument
+                       {
+                            { "from", "Account" },
+                            { "localField", "UploaderId" },
+                            { "foreignField", "_id" },
+                            { "as", "UploaderName" }
+                       });
                 BsonDocument projectPipeline = new BsonDocument("$project",
                     new BsonDocument
                         {
                             { "_id", "$_id" },
                             { "isDeleted", "$isDeleted" },
                             { "CreatedDate", "$CreatedDate" },
-                            { "UploaderId", "$UploaderId" },
+                            { "UploaderName", "$UploaderName.Username" },
                             { "CategoryName", "$CategoryId.Name" },
                             { "Name", "$Name" },
                             { "Description", "$Description" },
@@ -31,7 +38,9 @@ namespace Application.Aggregation
                             { "Chapters", "$Chapters" },
                             {  "Status","$Status" }
                         });
-                BsonDocument[] aggregateStages = new BsonDocument[] { lookupPipeline, projectPipeline };
+                BsonDocument unwindPipeline = new BsonDocument("$unwind",
+                new BsonDocument("path", "$UploaderName"));
+                BsonDocument[] aggregateStages = new BsonDocument[] { lookupPipeline,lookupPipeline2, projectPipeline,unwindPipeline};
                 return aggregateStages;
             }
         }

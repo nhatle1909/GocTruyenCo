@@ -34,10 +34,10 @@ namespace Controller.Controllers
             }
             return Ok(query);
         }
-        [HttpPut]
-        public async Task<IActionResult> UpdateChapterImagesAsync(List<CommandComicChapterImageDTO> commandComicChapterImageDTOs)
+        [HttpPut("{comicChapterId}")]
+        public async Task<IActionResult> UpdateChapterImagesAsync(Guid comicChapterId,List<CommandComicChapterImageDTO> commandComicChapterImageDTOs)
         {
-            var query = await _comicChapterImageService.UpdateChapterImagesAsync(commandComicChapterImageDTOs);
+            var query = await _comicChapterImageService.UpdateChapterImagesAsync(comicChapterId,commandComicChapterImageDTOs);
             if (!query.Success)
             {
                 return BadRequest(query);

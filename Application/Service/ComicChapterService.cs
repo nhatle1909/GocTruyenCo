@@ -43,16 +43,16 @@ namespace Application.Service
             return result;
         }
 
-        public async Task<ServiceResponse<QueryComicChapterDTO>> GetAllChapter(Guid comicId)
+        public async Task<ServiceResponse<IEnumerable<QueryComicChapterDTO>>> GetAllChapter(Guid comicId)
         {
-            ServiceResponse<QueryComicChapterDTO> result = new();
+            ServiceResponse<IEnumerable<QueryComicChapterDTO>> result = new();
             try
             {
                 string[] searchField = ["ComicId"];
                 string[] searchValue = [comicId.ToString()];
                 var query = await _unitofwork.GetRepository<ComicChapter>().GetAllByFilterAsync(searchField, searchValue);
                 
-                var data = _mapper.Map<QueryComicChapterDTO>(query);
+                var data = _mapper.Map<IEnumerable<QueryComicChapterDTO>>(query);
                 result.CustomResponse(data, true, "Get all chapter successful");
                 
             }
@@ -63,16 +63,16 @@ namespace Application.Service
             return result;
         }
 
-        public async Task<ServiceResponse<QueryComicChapterDTO>> GetChaptersPaging(SearchDTO searchDTO)
+        public async Task<ServiceResponse<IEnumerable<QueryComicChapterDTO>>> GetChaptersPaging(SearchDTO searchDTO)
         {
-            ServiceResponse<QueryComicChapterDTO> result = new();
+            ServiceResponse<IEnumerable<QueryComicChapterDTO>> result = new();
             try
             {
                
                 var query = await _unitofwork.GetRepository<ComicChapter>().PagingAsync(searchDTO.searchFields,searchDTO.searchValues,searchDTO.sortField,
                                                                                         searchDTO.sortAscending,searchDTO.pageSize,searchDTO.skip);
              
-                var data = _mapper.Map<QueryComicChapterDTO>(query);
+                var data = _mapper.Map<IEnumerable<QueryComicChapterDTO>>(query);
                 result.CustomResponse(data, true, "Get all chapter successful");
                 
             }
@@ -89,24 +89,23 @@ namespace Application.Service
             try
             {
                 var query = await _unitofwork.GetRepository<ComicChapter>().GetByIdAsync(chapterId);
-                if (query != null)
-                {
-                    var comicChapter = _mapper.Map<ComicChapter>(commandComicChapterDTO);
- 
-                    bool command = await _unitofwork.GetRepository<ComicChapter>().UpdateItemAsync(chapterId, comicChapter);
-                    if (!command)
-                    {
-                        result.CustomResponse(false, false, "Update chapter failed");
-                        return result;
-                      
-                    }
-                    await _unitofwork.CommitAsync();
-                    result.CustomResponse(true, true, "Update chapter successful");
-                }
-                else
+                if (query == null) 
                 {
                     result.CustomResponse(false, false, "Chapter not found");
                 }
+                
+                var comicChapter = _mapper.Map<ComicChapter>(commandComicChapterDTO);
+                comicChapter.Id = chapterId;
+                bool command = await _unitofwork.GetRepository<ComicChapter>().UpdateItemAsync(chapterId, comicChapter);
+
+                if (!command)
+                {
+                    result.CustomResponse(false, false, "Update chapter failed");
+                    return result;
+
+                }
+                await _unitofwork.CommitAsync();
+                result.CustomResponse(true, true, "Update chapter successful");
             }
             catch (Exception ex)
             {

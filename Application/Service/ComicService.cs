@@ -49,7 +49,7 @@ namespace Application.Service
             try
             {
                 var query = await _unitofwork.GetRepository<Comic>().GetByIdAsync(id);
-                if (query != null)
+                if (query == null)
                 {
                     result.CustomResponse(false, false, "Comic not found");
                     
@@ -73,7 +73,7 @@ namespace Application.Service
 
             try
             {
-                var query = await _unitofwork.GetRepository<Comic>().GetByIdAsync(id);
+                var query = await _unitofwork.GetRepository<Comic>().GetByIdAsync(id,ComicAggregation.ComicBsonAggregation);
 
                 if (query == null)
                 {
@@ -115,7 +115,7 @@ namespace Application.Service
             try
             {
                 var comic = _mapper.Map<Comic>(comicDTO);
-
+                comic.Id = id;
                 var command = await _unitofwork.GetRepository<Comic>().UpdateItemAsync(id, comic);
 
                 if (!command)

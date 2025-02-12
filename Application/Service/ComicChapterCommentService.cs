@@ -46,14 +46,14 @@ namespace Application.Service
             return result;
         }
 
-        public async Task<ServiceResponse<QueryComicChapterCommentDTO>> GetPagingAsync(SearchDTO searchDTO)
+        public async Task<ServiceResponse<IEnumerable<QueryComicChapterCommentDTO>>> GetPagingAsync(SearchDTO searchDTO)
         {
-            ServiceResponse<QueryComicChapterCommentDTO> result = new();
+            ServiceResponse<IEnumerable<QueryComicChapterCommentDTO>> result = new();
             try
             {
                 var query = await _unitofwork.GetRepository<ComicChapterComment>().PagingAsync(searchDTO.searchFields,searchDTO.searchValues,searchDTO.sortField,
                                                                                                searchDTO.sortAscending,searchDTO.pageSize,searchDTO.skip,ComicChapterCommentAggregation.ComicChapterCommentBsonAggregation);
-                var queryDTO = _mapper.Map<QueryComicChapterCommentDTO>(query);
+                var queryDTO = _mapper.Map<IEnumerable<QueryComicChapterCommentDTO>>(query);
                 result.CustomResponse(queryDTO, true, "Get comments successfully");
             }
             catch (Exception ex)

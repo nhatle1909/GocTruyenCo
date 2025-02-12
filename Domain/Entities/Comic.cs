@@ -17,6 +17,7 @@ namespace Domain.Entities
 
         //Only Deserializing field
         [BsonIgnoreIfNull]public required List<string> CategoryName { get; set; }
-        
+        [BsonIgnoreIfNull]public required string UploaderName { get; set; }
+
     }
 }

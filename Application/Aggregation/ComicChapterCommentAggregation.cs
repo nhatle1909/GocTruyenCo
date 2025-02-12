@@ -21,25 +21,29 @@ namespace Application.Aggregation
                            { "foreignField", "_id" },
                            { "as", "result" }
                         });
-                BsonDocument lookupPipeline2 = new BsonDocument("$lookup",
-                    new BsonDocument
-                        {
-                            { "from", "ComicChapter" },
-                            { "localField", "ComicChapterId" },
-                            { "foreignField", "_id" },
-                            { "as", "ComicChapterName" }
-                        });
+                //BsonDocument lookupPipeline2 = new BsonDocument("$lookup",
+                //    new BsonDocument
+                //        {
+                //            { "from", "ComicChapter" },
+                //            { "localField", "ComicChapterId" },
+                //            { "foreignField", "_id" },
+                //            { "as", "ComicChapterName" }
+                //        });
                 BsonDocument projectPipeline = new BsonDocument("$project",
                     new BsonDocument
                         {
                             { "_id", "$_id" },
                             { "isDeleted", "$isDeleted" },
                             { "CreatedDate", "$CreatedDate" },
-                            { "ChapterName", "$ComicChapterName.Name" },
+                            //{ "ChapterName", "$ComicChapterName.Name" },
                             { "AccountName", "$result.Username" },
                             { "Comment", "$Comment" }
                         });
-                BsonDocument[] aggregateStages = new BsonDocument[] { lookupPipeline, lookupPipeline2, projectPipeline };
+                BsonDocument unwindPipeline = new BsonDocument("$unwind",
+                 new BsonDocument("path", "$AccountName"));
+                //BsonDocument unwindPipeline2 = new BsonDocument("$unwind",
+                //new BsonDocument("path", "$ChapterName"));
+                BsonDocument[] aggregateStages = new BsonDocument[] { lookupPipeline, projectPipeline,unwindPipeline };
                 return aggregateStages;
             }
         }
