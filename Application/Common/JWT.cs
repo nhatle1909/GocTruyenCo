@@ -4,7 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 namespace Application.Common
 {
-    public class JWT 
+    public class JWT
     {
         private IConfiguration _configuration;
         public static string secretKey = "";
@@ -28,7 +28,7 @@ namespace Application.Common
                 new Claim(ClaimTypes.Name,username),
                 new Claim(ClaimTypes.Email,email)
             };
-          
+
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey));
 
             // 3. Create Signing Credentials

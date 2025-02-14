@@ -1,7 +1,6 @@
-﻿using Application.Common;
-using Application.Interface.Service;
+﻿using Application.Interface.Service;
 using Application.Service;
-using Microsoft.Extensions.Configuration;
+using Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Configuration
@@ -29,6 +28,14 @@ namespace Application.Configuration
             services.AddTransient<IComicChapterImageService, ComicChapterImageService>();
             //ComicChapterComment
             services.AddTransient<IComicChapterCommentService, ComicChapterCommentService>();
+            //Bookmark
+            services.AddTransient<IBookmarkService, BookmarkService>();
+            //ForumTopicCategory
+            services.AddTransient<IForumTopicCategoryService, ForumTopicCategoryService>();
+            //ForumTopic
+            services.AddTransient<IForumTopicService, ForumTopicService>();
+            //ForumTopicComment
+            services.AddTransient<IForumTopicCommentService, ForumTopicCommentService>();
         }
     }
 }

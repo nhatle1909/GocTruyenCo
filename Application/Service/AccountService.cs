@@ -26,12 +26,12 @@ namespace Application.Service
                 try
                 {
                     Account query = await _unitofwork.GetRepository<Account>().GetByIdAsync(id);
-                    
+
                     if (query == null)
                     {
                         result.CustomResponse(false, false, "Account not found");
                     }
-                    
+
                     var newRole = query.Role;
                     Enum.TryParse<Role>(role, out newRole);
                     query.Role = newRole;
@@ -58,7 +58,7 @@ namespace Application.Service
 
                 var queryDTO = _mapper.Map<IEnumerable<QueryAccountDTO>>(query);
                 result.CustomResponse(queryDTO, true, "Retrieve data successful");
-        
+
             }
             catch (Exception ex)
             {
@@ -119,8 +119,8 @@ namespace Application.Service
                 {
                     result.CustomResponse(false, false, "Data updated fail");
                     return result;
-                }                                
-               
+                }
+
                 await _unitofwork.CommitAsync();
                 result.CustomResponse(true, true, "Data updated successful");
             }
@@ -141,7 +141,7 @@ namespace Application.Service
                 {
                     result.CustomResponse(false, false, "Account not found");
                 }
-                
+
                 query.isRestricted = true;
                 await _unitofwork.GetRepository<Account>().UpdateItemAsync(id, query);
                 await _unitofwork.CommitAsync();

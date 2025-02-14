@@ -11,7 +11,7 @@ namespace Controller.Controllers
         private readonly IComicChapterCommentService _comicChapterCommentService;
 
 
-        public ComicChapterCommentController(IComicChapterCommentService comicChapterCommentService )
+        public ComicChapterCommentController(IComicChapterCommentService comicChapterCommentService)
         {
             _comicChapterCommentService = comicChapterCommentService;
         }
@@ -22,9 +22,9 @@ namespace Controller.Controllers
             var query = await _comicChapterCommentService.GetPagingAsync(searchDTO);
             return Ok(query);
         }
-    
 
-        [Authorize(Roles= "Reader")]
+
+        [Authorize(Roles = "Reader")]
         [HttpPost()]
         public async Task<IActionResult> Create(CommandComicChapterCommentDTO commandComicChapterCommentDTO)
         {

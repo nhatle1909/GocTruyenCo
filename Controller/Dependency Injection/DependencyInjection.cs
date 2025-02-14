@@ -28,7 +28,7 @@ namespace Controller.Dependency_Injection
             //Account
             services.AddTransient<IValidator<CommandAccountDTO>, CommandAccountDTOValidation>();
         }
-        public static void AddSettings(this IServiceCollection services,IConfiguration configuration)
+        public static void AddSettings(this IServiceCollection services, IConfiguration configuration)
         {
             //CORS
             services.AddCors(options =>
@@ -54,7 +54,7 @@ namespace Controller.Dependency_Injection
             {
                 loggingBuilder.AddConsole();
             });
-            
+
             //Authentication & Authorization
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddCookie()

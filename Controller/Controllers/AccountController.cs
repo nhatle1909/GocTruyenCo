@@ -56,7 +56,7 @@ namespace Controller.Controllers
             }
             return Ok(query);
         }
-        [Authorize(Roles= "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{accountid}")]
         public async Task<IActionResult> Restrict(Guid accountId)
         {

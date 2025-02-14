@@ -30,7 +30,7 @@ namespace Application.Service
                     result.CustomResponse(false, false, "Create comic category failed");
                     return result;
                 }
-             
+
                 await _unitofwork.CommitAsync();
                 result.CustomResponse(true, true, "Create comic category successful");
             }
@@ -52,7 +52,7 @@ namespace Application.Service
                     result.CustomResponse(false, false, "Comic category not found");
                     return result;
                 }
-             
+
                 query.isDeleted = true;
                 await _unitofwork.GetRepository<ComicCategory>().UpdateItemAsync(id, query);
                 await _unitofwork.CommitAsync();
@@ -72,10 +72,10 @@ namespace Application.Service
             try
             {
                 var query = await _unitofwork.GetRepository<ComicCategory>().GetAllAsync();
-                
+
                 var queryDTO = _mapper.Map<List<QueryComicCategoryDTO>>(query);
                 result.CustomResponse(queryDTO, true, "Retrieve data successful");
-                
+
             }
             catch (Exception ex)
             {
@@ -98,7 +98,7 @@ namespace Application.Service
                     result.CustomResponse(false, false, "Update comic category failed");
                     return result;
                 }
-                  
+
                 await _unitofwork.CommitAsync();
                 result.CustomResponse(true, true, "Update comic category successful");
             }

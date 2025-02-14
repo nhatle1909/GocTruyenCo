@@ -40,7 +40,7 @@ namespace Application.Aggregation
                         });
                 BsonDocument unwindPipeline = new BsonDocument("$unwind",
                 new BsonDocument("path", "$UploaderName"));
-                BsonDocument[] aggregateStages = new BsonDocument[] { lookupPipeline,lookupPipeline2, projectPipeline,unwindPipeline};
+                BsonDocument[] aggregateStages = new BsonDocument[] { lookupPipeline, lookupPipeline2, projectPipeline, unwindPipeline };
                 return aggregateStages;
             }
         }

@@ -4,12 +4,6 @@ using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entities;
-using MongoDB.Bson.Serialization.Serializers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Service
 {
@@ -24,13 +18,21 @@ namespace Application.Service
         }
         public async Task<ServiceResponse<bool>> CreateChapterImagesAsync(List<CommandComicChapterImageDTO> createChapterImageDTO)
         {
-            ServiceResponse<bool> result = new(); 
+            ServiceResponse<bool> result = new();
             try
             {
-                foreach (var item in createChapterImageDTO)
+                var items = _mapper.Map<IEnumerable<ComicChapterImage>>(createChapterImageDTO);
+                var itemList = items.ToList(); 
+                bool command = await _unitofwork.GetRepository<ComicChapterImage>().AddManyItemAsync(itemList);
+                //foreach (var item in createChapterImageDTO)
+                //{
+                //    var comicChapterImage = _mapper.Map<ComicChapterImage>(item);
+                //    bool command = await _unitofwork.GetRepository<ComicChapterImage>().AddOneItemAsync(comicChapterImage);
+                //}
+                if (!command)
                 {
-                    var comicChapterImage = _mapper.Map<ComicChapterImage>(item);
-                    bool command = await _unitofwork.GetRepository<ComicChapterImage>().AddOneItemAsync(comicChapterImage);
+                    result.CustomResponse(false, false, "Add chapter image failed");
+                    return result;
                 }
                 await _unitofwork.CommitAsync();
                 result.CustomResponse(true, false, "Create chapter image successfully");
@@ -52,7 +54,7 @@ namespace Application.Service
                 {
                     result.CustomResponse(false, false, "Chapter image not found");
                 }
-                
+
                 query.isDeleted = true;
                 await _unitofwork.GetRepository<ComicChapterImage>().UpdateItemAsync(id, query);
                 await _unitofwork.CommitAsync();
@@ -68,16 +70,16 @@ namespace Application.Service
 
         public async Task<ServiceResponse<IEnumerable<QueryComicChapterImageDTO>>> GetAllChapterImage(Guid comicChapterId)
         {
-           ServiceResponse<IEnumerable<QueryComicChapterImageDTO>> result = new();
+            ServiceResponse<IEnumerable<QueryComicChapterImageDTO>> result = new();
             try
             {
                 string[] searchField = ["ComicChapterId"];
                 string[] searchValue = [comicChapterId.ToString()];
                 var query = await _unitofwork.GetRepository<ComicChapterImage>().GetAllByFilterAsync(searchField, searchValue);
-              
+
                 var data = _mapper.Map<IEnumerable<QueryComicChapterImageDTO>>(query);
                 result.CustomResponse(data, true, "Get all chapter image successfully");
-                    
+
             }
             catch (Exception ex)
             {
@@ -87,7 +89,7 @@ namespace Application.Service
         }
 
         //Do i need to update chapter image? if Url of image is not changed and the only thing updated is image of that url ?
-        public async Task<ServiceResponse<bool>> UpdateChapterImagesAsync(Guid comicChapterId,List<CommandComicChapterImageDTO> updateChapterImageDTO)
+        public async Task<ServiceResponse<bool>> UpdateChapterImagesAsync(Guid comicChapterId, List<CommandComicChapterImageDTO> updateChapterImageDTO)
         {
             ServiceResponse<bool> result = new();
             try
@@ -95,7 +97,7 @@ namespace Application.Service
                 //Find all chapter image of a chapter
                 string[] searchFields = ["ComicChapterId"];
                 string[] searchValues = [comicChapterId.ToString()];
-                var comicImages = await _unitofwork.GetRepository<ComicChapterImage>().GetAllByFilterAsync(searchFields,searchValues);
+                var comicImages = await _unitofwork.GetRepository<ComicChapterImage>().GetAllByFilterAsync(searchFields, searchValues);
                 // Sort images by order of URL ( ../Image01.jpg, ../Image02.jpg, ...)
                 comicImages.OrderBy(x => x.ImageURL);
                 var ImagesArray = comicImages.ToArray();
@@ -103,10 +105,10 @@ namespace Application.Service
                 for (int i = 0; i < ImagesArray.Count(); i++)
                 {
                     ImagesArray[i] = _mapper.Map<ComicChapterImage>(updateChapterImageDTO[i]);
-           
+
                     await _unitofwork.GetRepository<ComicChapterImage>().UpdateItemAsync(ImagesArray[i].Id, ImagesArray[i]);
                 }
-                
+
                 await _unitofwork.CommitAsync();
                 result.CustomResponse(true, true, "Update chapter image success");
             }

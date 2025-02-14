@@ -5,7 +5,7 @@ namespace Domain.Entities
 {
     public class ComicCategory : BaseEntity
     {
-        [BsonElement] public required string Name { get; set; }
-        [BsonElement] public required string Description { get; set; }
+         public required string Name { get; set; }
+         public required string Description { get; set; }
     }
 }

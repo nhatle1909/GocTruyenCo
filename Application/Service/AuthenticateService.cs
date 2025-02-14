@@ -15,7 +15,7 @@ namespace Application.Service
         private readonly string[] emailField = ["Email"];
         private readonly IConfiguration _configuration;
         private readonly JWT _jwt;
-        public AuthenticateService(IUnitofwork unitofwork, IMapper mapper,IConfiguration configuration)
+        public AuthenticateService(IUnitofwork unitofwork, IMapper mapper, IConfiguration configuration)
         {
             _unitofwork = unitofwork;
             _mapper = mapper;
@@ -26,7 +26,7 @@ namespace Application.Service
         {
             ServiceResponse<string> result = new();
 
-         
+
             string[] loginData = [authenticateDTO.Email];
 
             var query = await _unitofwork.GetRepository<Account>().GetAllByFilterAsync(emailField, loginData);
@@ -37,7 +37,7 @@ namespace Application.Service
                 result.CustomResponse("", false, "Account not found");
                 return result;
             }
-            
+
             if (account.Password != authenticateDTO.Password)
             {
                 result.CustomResponse("", false, "Password is incorrect");
@@ -64,7 +64,7 @@ namespace Application.Service
             try
             {
                 Account item = _mapper.Map<Account>(signupDTO);
-      
+
                 string[] emailValue = [signupDTO.Email];
 
                 var query = await _unitofwork.GetRepository<Account>().GetAllByFilterAsync(emailField, emailValue);

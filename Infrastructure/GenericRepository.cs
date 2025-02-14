@@ -104,14 +104,26 @@ namespace Infrastructure
 
         public async Task<IEnumerable<T>> PagingAsync(string[] searchFields, string[] searchValue, string sortField, bool isAsc, int pageSize, int skip, BsonDocument[] aggregates = null)
         {
-        
+
             IAggregateFluent<T> query;
 
             //Create Filter
             FilterDefinition<T> filterDefinition = Builders<T>.Filter.Empty;
             for (int i = 0; i < searchFields.Length; i++)
             {
-                FilterDefinition<T> tempFilter = Builders<T>.Filter.Regex(searchFields[i], searchValue[i]);
+                FilterDefinition<T> tempFilter = Builders<T>.Filter.Empty;
+                
+                //Convert boolean string to boolean variable
+                if (searchValue[i].Equals("true") || searchValue[i].Equals("false"))
+                {
+                    bool boolval = Boolean.Parse(searchValue[i]);
+                    tempFilter = Builders<T>.Filter.Eq(searchFields[i], boolval);
+                }
+                else
+                {
+                 tempFilter = Builders<T>.Filter.Regex(searchFields[i], searchValue[i]);
+
+                }
                 filterDefinition = Builders<T>.Filter.And(filterDefinition, tempFilter);
             }
 
@@ -132,9 +144,9 @@ namespace Infrastructure
             query = query.Sort(sortDefinition)
                          .Limit(pageSize)
                          .Skip((skip - 1) * pageSize);
-           
+
             var result = await query.ToListAsync();
-        
+
             return result;
         }   //Finish
 
@@ -161,7 +173,7 @@ namespace Infrastructure
             {
                 string IdString = id.ToString();
                 var filter = Builders<T>.Filter.Eq("_id", IdString);
-                var updateDefinition = Builders<T>.Update.Set(T => T,replacement);    
+                var updateDefinition = Builders<T>.Update.Set(T => T, replacement);
                 await _collection.ReplaceOneAsync(filter, replacement);
                 RemoveCache(IdString);
                 return true;
@@ -173,14 +185,14 @@ namespace Infrastructure
             return false;
         } //Finish
 
-       
+
         public async Task<IEnumerable<T>> GetAllByFilterAsync(string[] searchFields, string[] searchValue)
         {
             var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
             var postCacheKey = CacheKeyUtils.GenerateCacheKeyMinor(searchFields, searchValue);
-            
+
             FilterDefinition<T> filterDefinition = Builders<T>.Filter.Empty;
-            
+
             for (int i = 0; i < searchFields.Length; i++)
             {
                 FilterDefinition<T> tempFilter = Builders<T>.Filter.Regex(searchFields[i], searchValue[i]);
@@ -189,13 +201,13 @@ namespace Infrastructure
 
             var query = await _collection.Find(filterDefinition).ToListAsync();
 
-            _memoryCache.Set(cacheKey+postCacheKey,query);
+            _memoryCache.Set(cacheKey + postCacheKey, query);
             keyValuePairs.Add(cacheKey + postCacheKey);
             return query;
         } //Finish
-        public async Task<long> CountAsync(string[] searchFields, string[] searchValue,int pageSize)
+        public async Task<long> CountAsync(string[] searchFields, string[] searchValue, int pageSize)
         {
-            
+
             FilterDefinition<T> filterDefinition = Builders<T>.Filter.Empty;
             for (int i = 0; i < searchFields.Length; i++)
             {
@@ -207,10 +219,10 @@ namespace Infrastructure
             var result = await query.ToListAsync();
             return (result.Count() / pageSize) + 1;
         }
-        
+
         private void RemoveCache(string key)
         {
-            if (key != null)  _memoryCache.Remove(key); // Remove Id key
+            if (key != null) _memoryCache.Remove(key); // Remove Id key
 
             _memoryCache.Remove(cacheKey); // Remove collection key
 

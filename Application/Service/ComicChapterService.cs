@@ -4,11 +4,6 @@ using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Service
 {
@@ -16,7 +11,7 @@ namespace Application.Service
     {
         private readonly IUnitofwork _unitofwork;
         private readonly IMapper _mapper;
-        public ComicChapterService(IUnitofwork unitofwork,IMapper mapper) 
+        public ComicChapterService(IUnitofwork unitofwork, IMapper mapper)
         {
             _unitofwork = unitofwork;
             _mapper = mapper;
@@ -51,10 +46,10 @@ namespace Application.Service
                 string[] searchField = ["ComicId"];
                 string[] searchValue = [comicId.ToString()];
                 var query = await _unitofwork.GetRepository<ComicChapter>().GetAllByFilterAsync(searchField, searchValue);
-                
+
                 var data = _mapper.Map<IEnumerable<QueryComicChapterDTO>>(query);
                 result.CustomResponse(data, true, "Get all chapter successful");
-                
+
             }
             catch (Exception ex)
             {
@@ -68,13 +63,13 @@ namespace Application.Service
             ServiceResponse<IEnumerable<QueryComicChapterDTO>> result = new();
             try
             {
-               
-                var query = await _unitofwork.GetRepository<ComicChapter>().PagingAsync(searchDTO.searchFields,searchDTO.searchValues,searchDTO.sortField,
-                                                                                        searchDTO.sortAscending,searchDTO.pageSize,searchDTO.skip);
-             
+
+                var query = await _unitofwork.GetRepository<ComicChapter>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField,
+                                                                                        searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip);
+
                 var data = _mapper.Map<IEnumerable<QueryComicChapterDTO>>(query);
                 result.CustomResponse(data, true, "Get all chapter successful");
-                
+
             }
             catch (Exception ex)
             {
@@ -89,11 +84,11 @@ namespace Application.Service
             try
             {
                 var query = await _unitofwork.GetRepository<ComicChapter>().GetByIdAsync(chapterId);
-                if (query == null) 
+                if (query == null)
                 {
                     result.CustomResponse(false, false, "Chapter not found");
                 }
-                
+
                 var comicChapter = _mapper.Map<ComicChapter>(commandComicChapterDTO);
                 comicChapter.Id = chapterId;
                 bool command = await _unitofwork.GetRepository<ComicChapter>().UpdateItemAsync(chapterId, comicChapter);

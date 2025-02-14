@@ -31,7 +31,8 @@ namespace Infrastructure
 
                 return uploadResult.Url.ToString();
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 throw new Exception(ex.Message);
             }
         }

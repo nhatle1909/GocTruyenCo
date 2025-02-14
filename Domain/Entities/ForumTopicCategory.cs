@@ -5,6 +5,6 @@ namespace Domain.Entities
 {
     public class ForumTopicCategory : BaseEntity
     {
-        [BsonElement] public required string CategoryName { get; set; }
+         public required string CategoryName { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace Application.Service
         {
             ServiceResponse<bool> result = new();
 
-           
+
             try
             {
                 var comic = _mapper.Map<Comic>(comicDTO);
@@ -31,7 +31,7 @@ namespace Application.Service
                 {
                     result.CustomResponse(false, false, "Create comic failed");
                     return result;
-           
+
                 }
                 await _unitofwork.CommitAsync();
                 result.CustomResponse(true, true, "Create comic successful");
@@ -52,9 +52,9 @@ namespace Application.Service
                 if (query == null)
                 {
                     result.CustomResponse(false, false, "Comic not found");
-                    
+
                 }
-               
+
                 query.isDeleted = true;
                 await _unitofwork.GetRepository<Comic>().UpdateItemAsync(id, query);
                 await _unitofwork.CommitAsync();
@@ -73,7 +73,7 @@ namespace Application.Service
 
             try
             {
-                var query = await _unitofwork.GetRepository<Comic>().GetByIdAsync(id,ComicAggregation.ComicBsonAggregation);
+                var query = await _unitofwork.GetRepository<Comic>().GetByIdAsync(id, ComicAggregation.ComicBsonAggregation);
 
                 if (query == null)
                 {

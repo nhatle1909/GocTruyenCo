@@ -5,11 +5,6 @@ using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Service
 {
@@ -32,7 +27,7 @@ namespace Application.Service
                 bool command = await _unitofwork.GetRepository<ComicChapterComment>().AddOneItemAsync(comment);
                 if (!command)
                 {
-                    result.CustomResponse(false,false, "Create new comment failed");
+                    result.CustomResponse(false, false, "Create new comment failed");
                     return result;
                 }
                 await _unitofwork.CommitAsync();
@@ -51,8 +46,8 @@ namespace Application.Service
             ServiceResponse<IEnumerable<QueryComicChapterCommentDTO>> result = new();
             try
             {
-                var query = await _unitofwork.GetRepository<ComicChapterComment>().PagingAsync(searchDTO.searchFields,searchDTO.searchValues,searchDTO.sortField,
-                                                                                               searchDTO.sortAscending,searchDTO.pageSize,searchDTO.skip,ComicChapterCommentAggregation.ComicChapterCommentBsonAggregation);
+                var query = await _unitofwork.GetRepository<ComicChapterComment>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField,
+                                                                                               searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip, ComicChapterCommentAggregation.ComicChapterCommentBsonAggregation);
                 var queryDTO = _mapper.Map<IEnumerable<QueryComicChapterCommentDTO>>(query);
                 result.CustomResponse(queryDTO, true, "Get comments successfully");
             }

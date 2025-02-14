@@ -35,7 +35,7 @@ namespace Controller.Controllers
             return Ok(query);
         }
         [HttpGet]
-        public async Task<IActionResult> GetPaging([FromQuery]SearchDTO searchDTO)
+        public async Task<IActionResult> GetPaging([FromQuery] SearchDTO searchDTO)
         {
             var query = await _comicChapterService.GetChaptersPaging(searchDTO);
             if (!query.Success)
