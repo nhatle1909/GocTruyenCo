@@ -1,4 +1,5 @@
-﻿using Application.Common;
+﻿using Application.Aggregation;
+using Application.Common;
 using Application.DTO;
 using Application.Interface;
 using Application.Interface.Service;
@@ -72,7 +73,7 @@ namespace Application.Service
             try 
             {
                 var query = await _unitofwork.GetRepository<ForumTopic>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField,
-                                                                                     searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip);
+                                                                                     searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip,ForumTopicAggregation.ForumTopicBsonAggregation);
                 var queryDTO = _mapper.Map<IEnumerable<QueryForumTopicDTO>>(query);
                 
                 await _unitofwork.CommitAsync();

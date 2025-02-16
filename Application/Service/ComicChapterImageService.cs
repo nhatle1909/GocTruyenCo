@@ -35,7 +35,7 @@ namespace Application.Service
                     return result;
                 }
                 await _unitofwork.CommitAsync();
-                result.CustomResponse(true, false, "Create chapter image successfully");
+                result.CustomResponse(true, true, "Create chapter image successfully");
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
-﻿using Application.Common;
+﻿using Application.Aggregation;
+using Application.Common;
 using Application.DTO;
 using Application.Interface;
 using Application.Interface.Service;
@@ -28,7 +29,7 @@ namespace Application.Service
             try
             {
                 var query = await _unitofwork.GetRepository<ForumTopicComment>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField,
-                                                                                             searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip);
+                                                                                             searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip,ForumTopicCommentAggregation.ForumTopicCommentBsonAggregation);
                 var queryDTO = _mapper.Map<IEnumerable<QueryForumTopicCommentDTO>>(query);
                 await _unitofwork.CommitAsync();
                 result.CustomResponse(queryDTO, true, "Retrieve data successful");

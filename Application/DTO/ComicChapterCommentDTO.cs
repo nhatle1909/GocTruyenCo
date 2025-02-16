@@ -2,10 +2,11 @@
 {
     public class QueryComicChapterCommentDTO
     {
+        public Guid Id { get; set; }
         public string AccountName { get; set; }
         public string ChapterName { get; set; }
         public string Comment { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public string CreatedDate { get; set; }
     }
     public class CommandComicChapterCommentDTO
     {

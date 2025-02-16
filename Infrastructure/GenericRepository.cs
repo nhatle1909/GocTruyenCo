@@ -108,25 +108,8 @@ namespace Infrastructure
             IAggregateFluent<T> query;
 
             //Create Filter
-            FilterDefinition<T> filterDefinition = Builders<T>.Filter.Empty;
-            for (int i = 0; i < searchFields.Length; i++)
-            {
-                FilterDefinition<T> tempFilter = Builders<T>.Filter.Empty;
-                
-                //Convert boolean string to boolean variable
-                if (searchValue[i].Equals("true") || searchValue[i].Equals("false"))
-                {
-                    bool boolval = Boolean.Parse(searchValue[i]);
-                    tempFilter = Builders<T>.Filter.Eq(searchFields[i], boolval);
-                }
-                else
-                {
-                 tempFilter = Builders<T>.Filter.Regex(searchFields[i], searchValue[i]);
-
-                }
-                filterDefinition = Builders<T>.Filter.And(filterDefinition, tempFilter);
-            }
-
+            FilterDefinition<T> filterDefinition = FilterDefinitionsBuilders(searchFields,searchValue);
+           
             //Create Sort
             SortDefinition<T> sortDefinition = isAsc ? Builders<T>.Sort.Ascending(sortField) : Builders<T>.Sort.Descending(sortField);
 
@@ -230,6 +213,42 @@ namespace Infrastructure
             {
                 _memoryCache.Remove(item); // Remove paging key
             }
+        }
+
+        private FilterDefinition<T> FilterDefinitionsBuilders(string[] searchFields, string[] searchValue, bool[] isExclude = null)
+        {
+         
+
+            //Create Filter
+            FilterDefinition<T> filterDefinition = Builders<T>.Filter.Eq("isDeleted",false);
+
+            for (int i = 0; i < searchFields.Length; i++)
+            {
+                FilterDefinition<T> tempFilter  = Builders<T>.Filter.Regex(searchFields[i], searchValue[i]);
+                bool isIntVar = false;
+                int intVar = 0;
+
+                bool Excluded = searchValue[i].StartsWith("!");
+                //Convert boolean string to boolean variable
+                if (searchValue[i].Equals("true") || searchValue[i].Equals("false"))
+                {
+                    bool boolval = Boolean.Parse(searchValue[i]);
+                    tempFilter = Builders<T>.Filter.Eq(searchFields[i], boolval);
+                }
+                //Convert int string to int variable
+                if (isIntVar = Int32.TryParse(searchValue[i], out intVar))
+                {
+                    tempFilter = Builders<T>.Filter.Eq(searchFields[i], intVar);
+                }
+                if (Excluded)
+                {
+                    tempFilter = Builders<T>.Filter.Ne(searchFields[i], searchValue[i].Substring(1));
+                }
+                filterDefinition = Builders<T>.Filter.And(filterDefinition, tempFilter);
+            }
+
+
+            return filterDefinition;
         }
     }
 }

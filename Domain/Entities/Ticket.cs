@@ -8,7 +8,7 @@ namespace Domain.Entities
     {
          public required string Title { get; set; }
          public required string Description { get; set; }
-        [BsonRepresentation(BsonType.String)] public TicketStatus Status { get; set; }
-        [BsonRepresentation(BsonType.String)] public TicketType Type { get; set; }
+        [BsonRepresentation(BsonType.String)] public required TicketStatus Status { get; set; }
+        [BsonRepresentation(BsonType.String)] public required TicketType Type { get; set; }
     }
 }
