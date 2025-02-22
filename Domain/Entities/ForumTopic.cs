@@ -7,8 +7,8 @@ namespace Domain.Entities
     {
         [BsonRepresentation(BsonType.String)] public required Guid CreatorId { get; set; }
         [BsonRepresentation(BsonType.String)] public required Guid ForumCategoryId { get; set; }
-         public required bool isLock { get; set; }
-         public required string Title { get; set; }
+        public required bool isLock { get; set; }
+        public required string Title { get; set; }
 
         [BsonIgnoreIfNull] public string CreatorName { get; set; }
         [BsonIgnoreIfNull] public string TopicCategory { get; set; }

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Controller.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/[controller]")]
     public class AuthenticateController : ControllerBase
     {
         private readonly IAuthenticateService _authenticateService;

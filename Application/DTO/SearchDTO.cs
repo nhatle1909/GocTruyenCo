@@ -9,5 +9,11 @@
         public required int pageSize { get; set; }
         public required int skip { get; set; }
     }
-    
+    public class CountDTO
+    {
+        public string[] searchFields { get; set; }
+        public string[] searchValues { get; set; }
+        public required int pageSize { get; set; }
+    }
+
 }

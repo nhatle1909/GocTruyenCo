@@ -1,5 +1,4 @@
 ﻿using Application.DTO;
-using Application.Service;
 using AutoMapper;
 using Domain.Entities;
 
@@ -34,11 +33,11 @@ namespace Application.Configuration
             CreateMap<Bookmark, QueryBookmarkDTO>().ReverseMap();
             CreateMap<Bookmark, CommandBookmarkDTO>().ReverseMap();
             //ForumTopicCategory
-            CreateMap<ForumTopicCategory,QueryForumTopicCategoryDTO>().ReverseMap();
-            CreateMap<ForumTopicCategory,CommandForumTopicCategoryDTO>().ReverseMap();
+            CreateMap<ForumTopicCategory, QueryForumTopicCategoryDTO>().ReverseMap();
+            CreateMap<ForumTopicCategory, CommandForumTopicCategoryDTO>().ReverseMap();
             //ForumTopic
-            CreateMap<ForumTopic,QueryForumTopicDTO>().ReverseMap();
-            CreateMap<ForumTopic,CommandForumTopicDTO>().ReverseMap();   
+            CreateMap<ForumTopic, QueryForumTopicDTO>().ReverseMap();
+            CreateMap<ForumTopic, CommandForumTopicDTO>().ReverseMap();
             //ForumTopicComment
             CreateMap<ForumTopicComment, QueryForumTopicCommentDTO>().ReverseMap();
             CreateMap<ForumTopicComment, CommandForumTopicCommentDTO>().ReverseMap();

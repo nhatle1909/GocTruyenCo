@@ -108,5 +108,19 @@ namespace Application.Service
             }
             return result;
         }
+        public async Task<ServiceResponse<long>> CountAsync(CountDTO countDTO)
+        {
+            ServiceResponse<long> result = new();
+            try
+            {
+                var query = await _unitofwork.GetRepository<ComicChapter>().CountAsync(countDTO.searchFields, countDTO.searchValues, countDTO.pageSize);
+                result.CustomResponse(query, true, "Count successful");
+            }
+            catch (Exception ex)
+            {
+                result.TryCatchResponse(ex);
+            }
+            return result;
+        }
     }
 }

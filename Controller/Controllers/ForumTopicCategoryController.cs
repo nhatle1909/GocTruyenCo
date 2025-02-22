@@ -1,11 +1,10 @@
 using Application.DTO;
 using Application.Interface.Service;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace Controller.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/[controller]")]
     public class ForumTopicCategoryController : ControllerBase
     {
         private readonly IForumTopicCategoryService _forumTopicCategoryService;
@@ -13,7 +12,7 @@ namespace Controller.Controllers
         public ForumTopicCategoryController(IForumTopicCategoryService forumTopicCategoryService)
         {
             _forumTopicCategoryService = forumTopicCategoryService;
-          
+
         }
 
         [HttpGet()]
@@ -32,7 +31,7 @@ namespace Controller.Controllers
             }
             return Ok(command);
         }
- 
+
         [HttpDelete("{topicCategoryId}")]
         public async Task<IActionResult> DeleteTopic(Guid topicCategoryId)
         {

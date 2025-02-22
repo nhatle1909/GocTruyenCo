@@ -7,7 +7,7 @@ namespace Domain.Entities
     {
         [BsonRepresentation(BsonType.String)] public required Guid AccountId { get; set; }
         [BsonRepresentation(BsonType.String)] public required Guid ComicChapterId { get; set; }
-         public required string Comment { get; set; }
+        public required string Comment { get; set; }
 
         // This is a reference to the Account collection
         [BsonIgnoreIfNull] public string AccountName { get; set; }

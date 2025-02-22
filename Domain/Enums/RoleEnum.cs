@@ -2,7 +2,7 @@
 {
     public enum Role
     {
-       
+
         Reader,
         Uploader,
         Admin

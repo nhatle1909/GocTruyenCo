@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Controller.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/[controller]")]
     public class ComicChapterCommentController : ControllerBase
     {
         private readonly IComicChapterCommentService _comicChapterCommentService;
@@ -33,6 +33,12 @@ namespace Controller.Controllers
             {
                 return BadRequest(query);
             }
+            return Ok(query);
+        }
+        [HttpGet("Count")]
+        public async Task<IActionResult> Count([FromQuery] CountDTO countDTO)
+        {
+            var query = await _comicChapterCommentService.CountAsync(countDTO);
             return Ok(query);
         }
     }

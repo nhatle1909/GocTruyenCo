@@ -9,5 +9,6 @@ namespace Application.Interface.Service
         Task<ServiceResponse<IEnumerable<QueryComicChapterDTO>>> GetChaptersPaging(SearchDTO searchDTO);
         Task<ServiceResponse<bool>> UpdateChapter(Guid chapterId, CommandComicChapterDTO commandComicChapterDTO);
         Task<ServiceResponse<bool>> CreateChapter(CommandComicChapterDTO commandComicChapterDTO);
+        Task<ServiceResponse<long>> CountAsync(CountDTO countDTO);
     }
 }

@@ -1,9 +1,4 @@
 ﻿using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Aggregation
 {
@@ -32,7 +27,7 @@ namespace Application.Aggregation
                         });
                 BsonDocument unwindPipeline = new BsonDocument("$unwind",
               new BsonDocument("path", "$AccountName"));
-                return new BsonDocument[] { lookupPipeline,projectPipeline,unwindPipeline };
+                return new BsonDocument[] { lookupPipeline, projectPipeline, unwindPipeline };
             }
         }
     }

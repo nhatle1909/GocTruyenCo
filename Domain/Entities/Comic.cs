@@ -9,10 +9,10 @@ namespace Domain.Entities
     {
         [BsonRepresentation(BsonType.String)] public required Guid UploaderId { get; set; }
         [BsonRepresentation(BsonType.String)] public required List<Guid> CategoryId { get; set; }
-         public required string Name { get; set; }
-         public required string Description { get; set; }
-         public required string ThemeURL { get; set; }
-         public required int Chapters { get; set; }
+        public required string Name { get; set; }
+        public required string Description { get; set; }
+        public required string ThemeURL { get; set; }
+        public required int Chapters { get; set; }
         [BsonRepresentation(BsonType.String)] public required ComicStatus Status { get; set; }
 
 

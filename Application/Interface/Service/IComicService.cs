@@ -12,7 +12,7 @@ namespace Application.Interface.Service
         Task<ServiceResponse<List<QueryComicDTO>>> GetComicPagingAsync(SearchDTO searchDTO);
         Task<ServiceResponse<bool>> UpdateComicStatusAsync(Guid id, string status);
         Task<ServiceResponse<bool>> UpdateComicChapterNumberAsync(Guid id, int chapters);
-
+        Task<ServiceResponse<long>> CountAsync(CountDTO countDTO);
 
     }
 }

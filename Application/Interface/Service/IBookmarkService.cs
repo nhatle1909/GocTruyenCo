@@ -9,6 +9,7 @@ namespace Application.Interface.Service
         Task<ServiceResponse<bool>> DeleteBookmark(Guid bookmarkId);
         Task<ServiceResponse<bool>> UpdateBookmarkType(Guid bookmarkId, string bookmarkType);
         Task<ServiceResponse<IEnumerable<QueryBookmarkDTO>>> GetPagingAsync(SearchDTO searchDTO);
+        Task<ServiceResponse<long>> CountAsync(CountDTO countDTO);
 
     }
 }

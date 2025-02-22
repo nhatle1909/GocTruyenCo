@@ -4,11 +4,6 @@ using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Service
 {
@@ -42,7 +37,7 @@ namespace Application.Service
                 result.TryCatchResponse(ex);
             }
             return result;
-           
+
         }
 
         public async Task<ServiceResponse<bool>> DeleteCategory(Guid topicCategoryId)
@@ -68,17 +63,17 @@ namespace Application.Service
 
         public async Task<ServiceResponse<IEnumerable<QueryForumTopicCategoryDTO>>> GetAllTopics()
         {
-            ServiceResponse<IEnumerable<QueryForumTopicCategoryDTO>> result = new(); 
-            try 
+            ServiceResponse<IEnumerable<QueryForumTopicCategoryDTO>> result = new();
+            try
             {
                 //var query = await _unitofwork.GetRepository<QueryForumTopicCategoryDTO>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField,
                 //                                                                                   searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip);
                 var query = await _unitofwork.GetRepository<ForumTopicCategory>().GetAllAsync();
-                var queryDTO = _mapper.Map<IEnumerable<QueryForumTopicCategoryDTO>>(query);    
+                var queryDTO = _mapper.Map<IEnumerable<QueryForumTopicCategoryDTO>>(query);
                 await _unitofwork.CommitAsync();
                 result.CustomResponse(queryDTO, true, "Retrieve data successful");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 result.TryCatchResponse(ex);
             }

@@ -22,7 +22,7 @@ namespace Application.Service
             try
             {
                 var items = _mapper.Map<IEnumerable<ComicChapterImage>>(createChapterImageDTO);
-                var itemList = items.ToList(); 
+                var itemList = items.ToList();
                 bool command = await _unitofwork.GetRepository<ComicChapterImage>().AddManyItemAsync(itemList);
                 //foreach (var item in createChapterImageDTO)
                 //{

@@ -5,12 +5,6 @@ using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Service
 {
@@ -52,15 +46,15 @@ namespace Application.Service
             try
             {
                 bool command = await _unitofwork.GetRepository<ForumTopic>().RemoveItemAsync(topicId);
-                if (!command) 
+                if (!command)
                 {
-                    result.CustomResponse(false, false, "Delete topic failed"); 
+                    result.CustomResponse(false, false, "Delete topic failed");
                     return result;
                 }
                 await _unitofwork.CommitAsync();
                 result.CustomResponse(true, true, "Delete topic successful");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 result.TryCatchResponse(ex);
             }
@@ -70,23 +64,23 @@ namespace Application.Service
         public async Task<ServiceResponse<IEnumerable<QueryForumTopicDTO>>> GetPagingAsync(SearchDTO searchDTO)
         {
             ServiceResponse<IEnumerable<QueryForumTopicDTO>> result = new();
-            try 
+            try
             {
                 var query = await _unitofwork.GetRepository<ForumTopic>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField,
-                                                                                     searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip,ForumTopicAggregation.ForumTopicBsonAggregation);
+                                                                                     searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip, ForumTopicAggregation.ForumTopicBsonAggregation);
                 var queryDTO = _mapper.Map<IEnumerable<QueryForumTopicDTO>>(query);
-                
+
                 await _unitofwork.CommitAsync();
                 result.CustomResponse(queryDTO, true, "Retrieve data successful");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 result.TryCatchResponse(ex);
             }
             return result;
         }
 
-        public async Task<ServiceResponse<bool>> UpdateTopicLock(Guid topicId,bool isLock)
+        public async Task<ServiceResponse<bool>> UpdateTopicLock(Guid topicId, bool isLock)
         {
             ServiceResponse<bool> result = new();
             try
@@ -99,13 +93,27 @@ namespace Application.Service
                 }
                 query.isLock = isLock;
                 bool command = await _unitofwork.GetRepository<ForumTopic>().UpdateItemAsync(topicId, query);
-                if(!command)
+                if (!command)
                 {
                     result.CustomResponse(false, false, "Update topic failed");
                     return result;
                 }
                 await _unitofwork.CommitAsync();
                 result.CustomResponse(true, true, "Update topic successful");
+            }
+            catch (Exception ex)
+            {
+                result.TryCatchResponse(ex);
+            }
+            return result;
+        }
+        public async Task<ServiceResponse<long>> CountAsync(CountDTO countDTO)
+        {
+            ServiceResponse<long> result = new();
+            try
+            {
+                var query = await _unitofwork.GetRepository<ForumTopic>().CountAsync(countDTO.searchFields, countDTO.searchValues, countDTO.pageSize);
+                result.CustomResponse(query, true, "Count successful");
             }
             catch (Exception ex)
             {

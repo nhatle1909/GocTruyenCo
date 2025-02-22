@@ -5,11 +5,6 @@ using Application.Interface;
 using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Service
 {
@@ -29,11 +24,12 @@ namespace Application.Service
             try
             {
                 var query = await _unitofwork.GetRepository<ForumTopicComment>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField,
-                                                                                             searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip,ForumTopicCommentAggregation.ForumTopicCommentBsonAggregation);
+                                                                                             searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip, ForumTopicCommentAggregation.ForumTopicCommentBsonAggregation);
                 var queryDTO = _mapper.Map<IEnumerable<QueryForumTopicCommentDTO>>(query);
                 await _unitofwork.CommitAsync();
                 result.CustomResponse(queryDTO, true, "Retrieve data successful");
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 result.TryCatchResponse(ex);
             }
@@ -56,6 +52,20 @@ namespace Application.Service
                 await _unitofwork.CommitAsync();
                 result.CustomResponse(true, true, "Post new comment successful");
 
+            }
+            catch (Exception ex)
+            {
+                result.TryCatchResponse(ex);
+            }
+            return result;
+        }
+        public async Task<ServiceResponse<long>> CountAsync(CountDTO countDTO)
+        {
+            ServiceResponse<long> result = new();
+            try
+            {
+                var query = await _unitofwork.GetRepository<ForumTopicComment>().CountAsync(countDTO.searchFields, countDTO.searchValues, countDTO.pageSize);
+                result.CustomResponse(query, true, "Count successful");
             }
             catch (Exception ex)
             {

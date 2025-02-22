@@ -1,15 +1,10 @@
 ﻿using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Aggregation
 {
     public class ForumTopicAggregation
     {
-        public static BsonDocument[] ForumTopicBsonAggregation 
+        public static BsonDocument[] ForumTopicBsonAggregation
         {
             get
             {
@@ -44,7 +39,7 @@ namespace Application.Aggregation
                                                     new BsonDocument("path", "$CreatorName"));
                 BsonDocument unwindPipeline2 = new BsonDocument("$unwind",
                                                     new BsonDocument("path", "$TopicCategory"));
-                return new BsonDocument[] { lookupPipeline1,lookupPipeline2,projectPipeline,unwindPipeline1,unwindPipeline2};
+                return new BsonDocument[] { lookupPipeline1, lookupPipeline2, projectPipeline, unwindPipeline1, unwindPipeline2 };
             }
         }
     }

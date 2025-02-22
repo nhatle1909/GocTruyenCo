@@ -11,5 +11,6 @@ namespace Application.Interface.Service
         Task<ServiceResponse<QueryAccountDTO>> GetByIdAsync(Guid id);
         Task<ServiceResponse<IEnumerable<QueryAccountDTO>>> GetAllAccountAsync();
         Task<ServiceResponse<IEnumerable<QueryAccountDTO>>> GetPagingAsync(SearchDTO searchDTO);
+        Task<ServiceResponse<long>> CountAsync(CountDTO countDTO);
     }
 }

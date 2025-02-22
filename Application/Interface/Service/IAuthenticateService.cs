@@ -8,6 +8,7 @@ namespace Application.Interface.Service
         Task<ServiceResponse<string>> SignInAsync(AuthenticateDTO authenticateDTO);
         Task<ServiceResponse<bool>> SignOutAsync();
         Task<ServiceResponse<string>> ResetPassword(string email);
+        Task<ServiceResponse<bool>> ChangePassword(AuthenticateDTO authenticateDTO);
         Task<ServiceResponse<bool>> SignUpAsync(SignUpDTO signUpDTO);
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Controller.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/[controller]")]
     public class BookmarkController : ControllerBase
     {
         private readonly IBookmarkService _bookmarkService;
@@ -54,6 +54,11 @@ namespace Controller.Controllers
             }
             return Ok(query);
         }
-
+        [HttpGet("Count")]
+        public async Task<IActionResult> Count([FromQuery] CountDTO countDTO)
+        {
+            var query = await _bookmarkService.CountAsync(countDTO);
+            return Ok(query);
+        }
     }
 }

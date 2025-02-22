@@ -1,11 +1,10 @@
 using Application.DTO;
 using Application.Interface.Service;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace Controller.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/[controller]")]
     public class ForumTopicController : ControllerBase
     {
         private readonly IForumTopicService _forumTopicService;
@@ -13,7 +12,7 @@ namespace Controller.Controllers
         public ForumTopicController(IForumTopicService forumTopicService)
         {
             _forumTopicService = forumTopicService;
-          
+
         }
 
         [HttpGet()]
@@ -51,6 +50,12 @@ namespace Controller.Controllers
                 return BadRequest(command);
             }
             return Ok(command);
+        }
+        [HttpGet("Count")]
+        public async Task<IActionResult> Count([FromQuery] CountDTO countDTO)
+        {
+            var query = await _forumTopicService.CountAsync(countDTO);
+            return Ok(query);
         }
     }
 }

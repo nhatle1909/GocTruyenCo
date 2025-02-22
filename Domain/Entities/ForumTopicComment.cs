@@ -7,7 +7,7 @@ namespace Domain.Entities
     {
         [BsonRepresentation(BsonType.String)] public required Guid ForumTopicId { get; set; }
         [BsonRepresentation(BsonType.String)] public required Guid AccountId { get; set; }
-         public required string Comment { get; set; }
+        public required string Comment { get; set; }
 
         [BsonIgnoreIfNull] public string AccountName { get; set; }
     }

@@ -89,5 +89,38 @@ namespace Application.Service
             }
             return result;
         }
+
+        public async Task<ServiceResponse<bool>> ChangePassword(AuthenticateDTO authenticateDTO)
+        {
+
+            ServiceResponse<bool> result = new();
+            try
+            {
+                Account item = _mapper.Map<Account>(authenticateDTO);
+
+                string[] emailValue = [authenticateDTO.Email];
+
+                var query = await _unitofwork.GetRepository<Account>().GetAllByFilterAsync(emailField, emailValue);
+
+                if (query.Count() == 0)
+                {
+                    result.CustomResponse(false, false, "Email does not exist");
+                    return result;
+                }
+                var account = query.FirstOrDefault();
+                bool command = await _unitofwork.GetRepository<Account>().UpdateItemAsync(account.Id, item); ;
+
+                if (command)
+                {
+                    await _unitofwork.CommitAsync();
+                    result.CustomResponse(true, true, "Change password successful");
+                }
+            }
+            catch (Exception ex)
+            {
+                result.TryCatchResponse(ex);
+            }
+            return result;
+        }
     }
 }

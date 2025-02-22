@@ -9,9 +9,9 @@ namespace Domain.Entities
     {
 
         [EmailAddress] public required string Email { get; set; }
-         public required string Password { get; set; }
-         public required string Username { get; set; }
-         public required bool isRestricted { get; set; }
+        public required string Password { get; set; }
+        public required string Username { get; set; }
+        public required bool isRestricted { get; set; }
         [BsonRepresentation(BsonType.String)] public required Role Role { get; set; }
     }
 }

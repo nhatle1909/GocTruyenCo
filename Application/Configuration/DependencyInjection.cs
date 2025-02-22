@@ -1,6 +1,5 @@
 ﻿using Application.Interface.Service;
 using Application.Service;
-using Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Configuration

@@ -108,8 +108,8 @@ namespace Infrastructure
             IAggregateFluent<T> query;
 
             //Create Filter
-            FilterDefinition<T> filterDefinition = FilterDefinitionsBuilders(searchFields,searchValue);
-           
+            FilterDefinition<T> filterDefinition = FilterDefinitionsBuilders(searchFields, searchValue);
+
             //Create Sort
             SortDefinition<T> sortDefinition = isAsc ? Builders<T>.Sort.Ascending(sortField) : Builders<T>.Sort.Descending(sortField);
 
@@ -125,8 +125,8 @@ namespace Infrastructure
             }
             //Sort and paging
             query = query.Sort(sortDefinition)
-                         .Limit(pageSize)
-                         .Skip((skip - 1) * pageSize);
+                         .Skip(skip)
+                         .Limit(pageSize);
 
             var result = await query.ToListAsync();
 
@@ -191,16 +191,10 @@ namespace Infrastructure
         public async Task<long> CountAsync(string[] searchFields, string[] searchValue, int pageSize)
         {
 
-            FilterDefinition<T> filterDefinition = Builders<T>.Filter.Empty;
-            for (int i = 0; i < searchFields.Length; i++)
-            {
-                FilterDefinition<T> tempFilter = Builders<T>.Filter.Regex(searchFields[i], searchValue[i]);
-                filterDefinition = Builders<T>.Filter.And(filterDefinition, tempFilter);
-            }
+            FilterDefinition<T> filterDefinition = FilterDefinitionsBuilders(searchFields, searchValue);
             //Query
-            var query = await _collection.FindAsync(filterDefinition);
-            var result = await query.ToListAsync();
-            return (result.Count() / pageSize) + 1;
+            var count = await _collection.CountDocumentsAsync(filterDefinition);
+            return (long)Math.Ceiling((double)count / pageSize);
         }
 
         private void RemoveCache(string key)
@@ -217,32 +211,35 @@ namespace Infrastructure
 
         private FilterDefinition<T> FilterDefinitionsBuilders(string[] searchFields, string[] searchValue, bool[] isExclude = null)
         {
-         
 
             //Create Filter
-            FilterDefinition<T> filterDefinition = Builders<T>.Filter.Eq("isDeleted",false);
+            FilterDefinition<T> filterDefinition = Builders<T>.Filter.Eq("isDeleted", false);
 
             for (int i = 0; i < searchFields.Length; i++)
             {
-                FilterDefinition<T> tempFilter  = Builders<T>.Filter.Regex(searchFields[i], searchValue[i]);
-                bool isIntVar = false;
-                int intVar = 0;
+                //Default search if search value is null or empty
+                FilterDefinition<T> tempFilter = Builders<T>.Filter.Empty;
 
-                bool Excluded = searchValue[i].StartsWith("!");
-                //Convert boolean string to boolean variable
-                if (searchValue[i].Equals("true") || searchValue[i].Equals("false"))
+
+                if (!string.IsNullOrEmpty(searchValue[i]))
                 {
-                    bool boolval = Boolean.Parse(searchValue[i]);
-                    tempFilter = Builders<T>.Filter.Eq(searchFields[i], boolval);
-                }
-                //Convert int string to int variable
-                if (isIntVar = Int32.TryParse(searchValue[i], out intVar))
-                {
-                    tempFilter = Builders<T>.Filter.Eq(searchFields[i], intVar);
-                }
-                if (Excluded)
-                {
-                    tempFilter = Builders<T>.Filter.Ne(searchFields[i], searchValue[i].Substring(1));
+
+                    tempFilter = Builders<T>.Filter.Regex(searchFields[i], searchValue[i]);
+
+                    bool isIntVar = false;
+                    int intVar = 0;
+                    bool Excluded = searchValue[i].StartsWith("!");
+
+                    //Convert boolean string to boolean variable
+                    if (bool.TryParse(searchValue[i], out bool boolval))
+                    {
+                        tempFilter = Builders<T>.Filter.Eq(searchFields[i], boolval);
+                    }
+                    //Convert int string to int variable
+                    if (isIntVar = Int32.TryParse(searchValue[i], out intVar)) tempFilter = Builders<T>.Filter.Eq(searchFields[i], intVar);
+                    //Exclude search value
+                    if (Excluded) tempFilter = Builders<T>.Filter.Ne(searchFields[i], searchValue[i].Substring(1));
+
                 }
                 filterDefinition = Builders<T>.Filter.And(filterDefinition, tempFilter);
             }

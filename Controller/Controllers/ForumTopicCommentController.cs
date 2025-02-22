@@ -1,11 +1,10 @@
 using Application.DTO;
 using Application.Interface.Service;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace Controller.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/[controller]")]
     public class ForumTopicCommentController : ControllerBase
     {
         private readonly IForumTopicCommentService _forumTopicCommentService;
@@ -13,7 +12,7 @@ namespace Controller.Controllers
         public ForumTopicCommentController(IForumTopicCommentService forumTopicCommentService)
         {
             _forumTopicCommentService = forumTopicCommentService;
-          
+
         }
 
         [HttpGet()]
@@ -31,6 +30,12 @@ namespace Controller.Controllers
                 return BadRequest(command);
             }
             return Ok(command);
+        }
+        [HttpGet("Count")]
+        public async Task<IActionResult> Count([FromQuery] CountDTO countDTO)
+        {
+            var query = await _forumTopicCommentService.CountAsync(countDTO);
+            return Ok(query);
         }
     }
 }

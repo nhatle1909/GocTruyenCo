@@ -1,11 +1,10 @@
 using Application.DTO;
 using Application.Interface.Service;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace Controller.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/[controller]")]
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
@@ -34,7 +33,7 @@ namespace Controller.Controllers
             }
             return Ok(query);
         }
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPut("/Role/{accountId}")]
         public async Task<IActionResult> UpdateRole(Guid accountId, string role)
         {
@@ -56,7 +55,7 @@ namespace Controller.Controllers
             }
             return Ok(query);
         }
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpDelete("{accountid}")]
         public async Task<IActionResult> Restrict(Guid accountId)
         {
@@ -65,6 +64,12 @@ namespace Controller.Controllers
             {
                 return BadRequest(query);
             }
+            return Ok(query);
+        }
+        [HttpGet("Count")]
+        public async Task<IActionResult> CountAsync([FromQuery] CountDTO countDTO)
+        {
+            var query = await _accountService.CountAsync(countDTO);
             return Ok(query);
         }
     }
