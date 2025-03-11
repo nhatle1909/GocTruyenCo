@@ -3,6 +3,7 @@ using Infrastructure.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Text.RegularExpressions;
 namespace Infrastructure
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
@@ -102,19 +103,17 @@ namespace Infrastructure
             return itemList;
         } //Finish
 
-        public async Task<IEnumerable<T>> PagingAsync(string[] searchFields, string[] searchValue, string sortField, bool isAsc, int pageSize, int skip, BsonDocument[] aggregates = null)
+        public async Task<IEnumerable<T>> PagingAsync(string[] searchFields, string[] searchValues, string sortField, bool isAsc, int pageSize, int skip, BsonDocument[] aggregates = null)
         {
 
-            IAggregateFluent<T> query;
-
             //Create Filter
-            FilterDefinition<T> filterDefinition = FilterDefinitionsBuilders(searchFields, searchValue);
+            FilterDefinition<T> filterDefinition = FilterDefinitionsBuilders(searchFields,searchValues);
 
             //Create Sort
             SortDefinition<T> sortDefinition = isAsc ? Builders<T>.Sort.Ascending(sortField) : Builders<T>.Sort.Descending(sortField);
 
             //Query
-            query = _collection.Aggregate()
+            IAggregateFluent<T> query = _collection.Aggregate()
                                .Match(filterDefinition);
             if (aggregates != null)
             {
@@ -125,7 +124,7 @@ namespace Infrastructure
             }
             //Sort and paging
             query = query.Sort(sortDefinition)
-                         .Skip(skip)
+                         .Skip((skip-1)*pageSize)
                          .Limit(pageSize);
 
             var result = await query.ToListAsync();
@@ -209,43 +208,60 @@ namespace Infrastructure
             }
         }
 
-        private FilterDefinition<T> FilterDefinitionsBuilders(string[] searchFields, string[] searchValue, bool[] isExclude = null)
+        private FilterDefinition<T> FilterDefinitionsBuilders(string[] searchField, string[] searchValues)
         {
-
-            //Create Filter
+            // Create Filter
             FilterDefinition<T> filterDefinition = Builders<T>.Filter.Eq("isDeleted", false);
-
-            for (int i = 0; i < searchFields.Length; i++)
+            for (int indexField = 0;indexField < searchField.Length; indexField++)
             {
-                //Default search if search value is null or empty
-                FilterDefinition<T> tempFilter = Builders<T>.Filter.Empty;
-
-
-                if (!string.IsNullOrEmpty(searchValue[i]))
-                {
-
-                    tempFilter = Builders<T>.Filter.Regex(searchFields[i], searchValue[i]);
-
-                    bool isIntVar = false;
-                    int intVar = 0;
-                    bool Excluded = searchValue[i].StartsWith("!");
-
-                    //Convert boolean string to boolean variable
-                    if (bool.TryParse(searchValue[i], out bool boolval))
-                    {
-                        tempFilter = Builders<T>.Filter.Eq(searchFields[i], boolval);
-                    }
-                    //Convert int string to int variable
-                    if (isIntVar = Int32.TryParse(searchValue[i], out intVar)) tempFilter = Builders<T>.Filter.Eq(searchFields[i], intVar);
-                    //Exclude search value
-                    if (Excluded) tempFilter = Builders<T>.Filter.Ne(searchFields[i], searchValue[i].Substring(1));
-
-                }
-                filterDefinition = Builders<T>.Filter.And(filterDefinition, tempFilter);
+                filterDefinition = Builders<T>.Filter.And(filterDefinition, BuildFilter(searchField[indexField], searchValues[indexField]));
             }
 
-
             return filterDefinition;
+        }
+
+        private FilterDefinition<T> BuildFilter(string searchField,string searchValue)
+        {
+            if (string.IsNullOrEmpty(searchValue))
+            {
+                return Builders<T>.Filter.Empty;
+            }
+            if (searchValue.Contains(",")){
+                string[] valueArray = searchValue.Split(',');
+                FilterDefinition<T> filters = Builders<T>.Filter.Empty;
+                foreach (string value in valueArray)
+                {
+                    filters = Builders<T>.Filter.And(filters,BuildSingleFilter(searchField,value));
+                }
+                return filters;
+            }
+            return BuildSingleFilter(searchField, searchValue);
+        }
+        private FilterDefinition<T> BuildSingleFilter(string searchField, string searchValue)
+        {
+
+            var regexPattern = new BsonRegularExpression(new Regex(searchValue, RegexOptions.None));
+            var tempFilter = Builders<T>.Filter.Regex(searchField, regexPattern);
+
+            // Convert boolean string to boolean variable
+            if (bool.TryParse(searchValue, out bool boolVal))
+            {
+                return Builders<T>.Filter.Eq(searchField, boolVal);
+            }
+
+            // Convert int string to int variable
+            if (int.TryParse(searchValue, out int intVal))
+            {
+                return Builders<T>.Filter.Eq(searchField, intVal);
+            }
+
+            // Exclude search value
+            if (searchValue.StartsWith("!"))
+            {
+                return Builders<T>.Filter.Ne(searchField, searchValue.Substring(1));
+            }
+
+            return tempFilter;
         }
     }
 }

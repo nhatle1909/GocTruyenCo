@@ -6,6 +6,7 @@
         public string Email { get; set; }
         public string Username { get; set; }
         public string CreatedDate { get; set; }
+        public bool isRestricted { get; set; }
     }
     public class CommandAccountDTO
     {

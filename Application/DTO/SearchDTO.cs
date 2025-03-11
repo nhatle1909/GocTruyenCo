@@ -15,5 +15,4 @@
         public string[] searchValues { get; set; }
         public required int pageSize { get; set; }
     }
-
 }

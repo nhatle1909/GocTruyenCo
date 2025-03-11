@@ -31,7 +31,7 @@ namespace Application.Service
 
             var query = await _unitofwork.GetRepository<Account>().GetAllByFilterAsync(emailField, loginData);
             var account = query.FirstOrDefault();
-
+            
             if (account == null)
             {
                 result.CustomResponse("", false, "Account not found");
@@ -43,7 +43,11 @@ namespace Application.Service
                 result.CustomResponse("", false, "Password is incorrect");
                 return result;
             }
-
+            if (account.isRestricted)
+            {
+                result.CustomResponse("", false, "Your account is restricted!");
+                return result;
+            }
             var token = _jwt.GenerateJwtToken(account.Id.ToString(), account.Role.ToString(), account.Username, account.Email);
             result.CustomResponse(token, true, "SignIn successful");
             return result;
@@ -107,6 +111,7 @@ namespace Application.Service
                     result.CustomResponse(false, false, "Email does not exist");
                     return result;
                 }
+
                 var account = query.FirstOrDefault();
                 bool command = await _unitofwork.GetRepository<Account>().UpdateItemAsync(account.Id, item); ;
 

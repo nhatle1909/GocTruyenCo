@@ -13,7 +13,7 @@ namespace Controller.Controllers
         {
             _cloudinaryService = cloudinaryService;
         }
-        [Authorize(Roles = "Admin,Uploader")]
+        //[Authorize(Roles = "Admin,Uploader")]
         [HttpPost("{comicName}")]
         public async Task<IActionResult> UploadThemeUrl(string comicName, IFormFile imageFile)
         {

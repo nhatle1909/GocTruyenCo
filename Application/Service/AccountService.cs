@@ -142,10 +142,20 @@ namespace Application.Service
                     result.CustomResponse(false, false, "Account not found");
                 }
 
-                query.isRestricted = true;
+                if (query.isRestricted == true) 
+                {
+                    query.isRestricted = false;
+                    result.CustomResponse(true, true, "Unrestrict account successful");
+
+                }
+                else 
+                {
+                     query.isRestricted = true;
+                    result.CustomResponse(true, true, "Restrict account successful");
+                }
                 await _unitofwork.GetRepository<Account>().UpdateItemAsync(id, query);
                 await _unitofwork.CommitAsync();
-                result.CustomResponse(true, true, "Restrict account successful");
+              
 
                 return result;
             }
