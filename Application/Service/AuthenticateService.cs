@@ -11,16 +11,18 @@ namespace Application.Service
     public class AuthenticateService : IAuthenticateService
     {
         private readonly IUnitofwork _unitofwork;
+        private readonly ISendMailOTPRepository _sendMailOTPRepository;
         private readonly IMapper _mapper;
         private readonly string[] emailField = ["Email"];
         private readonly IConfiguration _configuration;
         private readonly JWT _jwt;
-        public AuthenticateService(IUnitofwork unitofwork, IMapper mapper, IConfiguration configuration)
+        public AuthenticateService(IUnitofwork unitofwork, IMapper mapper, IConfiguration configuration,ISendMailOTPRepository sendMailOTPRepository)
         {
             _unitofwork = unitofwork;
             _mapper = mapper;
             _configuration = configuration;
             _jwt = new JWT(_configuration);
+            _sendMailOTPRepository = sendMailOTPRepository;
         }
         public async Task<ServiceResponse<string>> SignInAsync(AuthenticateDTO authenticateDTO)
         {
@@ -120,6 +122,45 @@ namespace Application.Service
                     await _unitofwork.CommitAsync();
                     result.CustomResponse(true, true, "Change password successful");
                 }
+            }
+            catch (Exception ex)
+            {
+                result.TryCatchResponse(ex);
+            }
+            return result;
+        }
+
+        public async Task<ServiceResponse<bool>> SendOTPMail(string email)
+        {
+            ServiceResponse<bool> result = new();
+            try
+            {
+                var OTP = await _sendMailOTPRepository.OTPGenerator(email);
+                var command = await _sendMailOTPRepository.SendEmailAsync(email, OTP);
+                if (command)
+                {
+                    result.CustomResponse(true, true, "Send OTP mail successfully");
+                }
+                else result.CustomResponse(false, false, "Send OTP mail failed");
+            }
+            catch (Exception ex)
+            {
+                result.TryCatchResponse(ex);
+            }
+            return result;
+        }
+
+        public async Task<ServiceResponse<bool>> VerifyOTP(string email, string OTP)
+        {
+            ServiceResponse<bool> result = new();
+            try
+            {
+                var command = await _sendMailOTPRepository.VerifyOTP(email, OTP);
+                if (command)
+                {
+                    result.CustomResponse(true, true, "Verify OTP successfully");
+                }
+                else result.CustomResponse(false, false, "Verify OTP failed");
             }
             catch (Exception ex)
             {

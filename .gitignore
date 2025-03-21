@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /GocTruyenCo.sln
 /GocTruyenCo.sln
+
+Controller/appsettings.json

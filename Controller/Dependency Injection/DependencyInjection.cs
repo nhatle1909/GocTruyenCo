@@ -64,12 +64,14 @@ namespace Controller.Dependency_Injection
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
+                    ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("JWT:secretkey").Value ?? throw new ArgumentNullException("builder.Configuration[\"Jwt:secretkey\"]", "Jwt:secretkey is null"))),
                     ValidIssuer = configuration.GetRequiredSection("JWT:issuer").Value,
                     ValidAudience = configuration.GetRequiredSection("JWT:audience").Value,
                     ClockSkew = TimeSpan.Zero
                 };
+               
             }); ;
             services.AddAuthorization();
 

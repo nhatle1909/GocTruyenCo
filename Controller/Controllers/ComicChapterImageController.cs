@@ -15,9 +15,9 @@ namespace Controller.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateComicChapterImagesAsync(List<CommandComicChapterImageDTO> commandComicChapterImageDTOs)
+        public async Task<IActionResult> CreateComicChapterImagesAsync(Guid comicChapterId,List<CommandComicChapterImageDTO> commandComicChapterImageDTOs)
         {
-            var query = await _comicChapterImageService.CreateChapterImagesAsync(commandComicChapterImageDTOs);
+            var query = await _comicChapterImageService.CreateChapterImagesAsync(comicChapterId,commandComicChapterImageDTOs);
             if (!query.Success)
             {
                 return BadRequest(query);

@@ -16,20 +16,20 @@ namespace Application.Service
             _unitofwork = unitofwork;
             _mapper = mapper;
         }
-        public async Task<ServiceResponse<bool>> CreateChapter(CommandComicChapterDTO commandComicChapterDTO)
+        public async Task<ServiceResponse<string>> CreateChapter(CommandComicChapterDTO commandComicChapterDTO)
         {
-            ServiceResponse<bool> result = new();
+            ServiceResponse<string> result = new();
             try
             {
                 var comicChapter = _mapper.Map<ComicChapter>(commandComicChapterDTO);
                 bool command = await _unitofwork.GetRepository<ComicChapter>().AddOneItemAsync(comicChapter);
                 if (!command)
                 {
-                    result.CustomResponse(false, false, "Create chapter failed");
+                    result.CustomResponse(comicChapter.Id.ToString(), false, "Create chapter failed");
                     return result;
                 }
                 await _unitofwork.CommitAsync();
-                result.CustomResponse(true, true, "Create chapter successful");
+                result.CustomResponse(comicChapter.Id.ToString(), true, "Create chapter successful");
             }
             catch (Exception ex)
             {

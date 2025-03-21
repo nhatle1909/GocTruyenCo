@@ -8,8 +8,6 @@
     }
     public class CommandComicChapterImageDTO
     {
-
-        public required Guid ComicChapterId { get; set; }
         public required string ImageUrl { get; set; }
     }
 }

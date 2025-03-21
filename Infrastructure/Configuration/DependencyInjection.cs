@@ -25,6 +25,7 @@ namespace Infrastructure.Configuration
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             //Cloudinary
             services.AddScoped<ICloudinaryRepository, CloudinaryRepository>();
+            services.AddScoped<ISendMailOTPRepository, SendMailOTPRepository>();
 
             services.AddSingleton(services => new Cloudinary(new Account(services.GetRequiredService<IConfiguration>()["Cloudinary:CloudName"],
                                                                          services.GetRequiredService<IConfiguration>()["Cloudinary:ApiKey"],
