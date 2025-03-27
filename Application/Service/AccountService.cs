@@ -21,6 +21,8 @@ namespace Application.Service
 
         public async Task<ServiceResponse<bool>> UpdateRoleAsync(Guid id, string role)
         {
+            int[] d = new int[5];
+            d.TakeLast(3);
             {
                 ServiceResponse<bool> result = new();
                 try
