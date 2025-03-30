@@ -21,8 +21,7 @@ namespace Application.Service
 
         public async Task<ServiceResponse<bool>> UpdateRoleAsync(Guid id, string role)
         {
-            int[] d = new int[5];
-            d.TakeLast(3);
+         
             {
                 ServiceResponse<bool> result = new();
                 try
@@ -32,6 +31,7 @@ namespace Application.Service
                     if (query == null)
                     {
                         result.CustomResponse(false, false, "Account not found");
+                        return result;
                     }
 
                     var newRole = query.Role;
@@ -78,7 +78,11 @@ namespace Application.Service
                 var query = await _unitofwork.GetRepository<Account>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField
                     , searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip);
                 var queryDTO = _mapper.Map<IEnumerable<QueryAccountDTO>>(query);
-
+                if (queryDTO == null)
+                {
+                    result.CustomResponse(queryDTO, false, "No data retrieved ");
+                    return result;
+                }
                 result.CustomResponse(queryDTO, true, "Retrieve data successful");
             }
             catch (Exception ex)
@@ -97,6 +101,7 @@ namespace Application.Service
                 if (item == null)
                 {
                     result.CustomResponse(null, false, "Account not found");
+                    return result;
                 }
 
                 var itemDTO = _mapper.Map<QueryAccountDTO>(item);
@@ -142,22 +147,23 @@ namespace Application.Service
                 if (query == null)
                 {
                     result.CustomResponse(false, false, "Account not found");
+                    return result;
                 }
 
-                if (query.isRestricted == true) 
+                if (query.isRestricted == true)
                 {
                     query.isRestricted = false;
                     result.CustomResponse(true, true, "Unrestrict account successful");
 
                 }
-                else 
+                else
                 {
-                     query.isRestricted = true;
+                    query.isRestricted = true;
                     result.CustomResponse(true, true, "Restrict account successful");
                 }
                 await _unitofwork.GetRepository<Account>().UpdateItemAsync(id, query);
                 await _unitofwork.CommitAsync();
-              
+
 
                 return result;
             }

@@ -107,7 +107,7 @@ namespace Infrastructure
         {
 
             //Create Filter
-            FilterDefinition<T> filterDefinition = FilterDefinitionsBuilders(searchFields,searchValues);
+            FilterDefinition<T> filterDefinition = FilterDefinitionsBuilders(searchFields, searchValues);
 
             //Create Sort
             SortDefinition<T> sortDefinition = isAsc ? Builders<T>.Sort.Ascending(sortField) : Builders<T>.Sort.Descending(sortField);
@@ -124,7 +124,7 @@ namespace Infrastructure
             }
             //Sort and paging
             query = query.Sort(sortDefinition)
-                         .Skip((skip-1)*pageSize)
+                         .Skip((skip - 1) * pageSize)
                          .Limit(pageSize);
 
             var result = await query.ToListAsync();
@@ -212,7 +212,7 @@ namespace Infrastructure
         {
             // Create Filter
             FilterDefinition<T> filterDefinition = Builders<T>.Filter.Eq("isDeleted", false);
-            for (int indexField = 0;indexField < searchField.Length; indexField++)
+            for (int indexField = 0; indexField < searchField.Length; indexField++)
             {
                 filterDefinition = Builders<T>.Filter.And(filterDefinition, BuildFilter(searchField[indexField], searchValues[indexField]));
             }
@@ -220,18 +220,19 @@ namespace Infrastructure
             return filterDefinition;
         }
 
-        private FilterDefinition<T> BuildFilter(string searchField,string searchValue)
+        private FilterDefinition<T> BuildFilter(string searchField, string searchValue)
         {
             if (string.IsNullOrEmpty(searchValue))
             {
                 return Builders<T>.Filter.Empty;
             }
-            if (searchValue.Contains(",")){
+            if (searchValue.Contains(","))
+            {
                 string[] valueArray = searchValue.Split(',');
                 FilterDefinition<T> filters = Builders<T>.Filter.Empty;
                 foreach (string value in valueArray)
                 {
-                    filters = Builders<T>.Filter.And(filters,BuildSingleFilter(searchField,value));
+                    filters = Builders<T>.Filter.And(filters, BuildSingleFilter(searchField, value));
                 }
                 return filters;
             }

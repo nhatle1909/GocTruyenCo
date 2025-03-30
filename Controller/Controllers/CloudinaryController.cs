@@ -1,5 +1,4 @@
 ﻿using Application.Interface.Service;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Controller.Controllers

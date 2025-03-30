@@ -1,29 +1,27 @@
 using Application.Common;
 using Application.DTO;
 using Application.Interface.Service;
-using CloudinaryDotNet.Actions;
-using Controller.Controllers;
-using Domain.Entities;
 using Moq;
 
 namespace GTT.API.Test
 {
     public class AccountTest
     {
-       
-      
+
+
         [Fact]
 
         public async Task GetPaging_Success_ReturnAllAdminRoleAccount()
         {
             //Arrange
-            SearchDTO searchDTO = new SearchDTO{
+            SearchDTO searchDTO = new SearchDTO
+            {
                 searchFields = ["Role"],
                 searchValues = ["Admin"],
                 sortField = "Username",
                 sortAscending = true,
                 pageSize = 10,
-                skip = 1 
+                skip = 1
             };
             var expectedResult = new List<QueryAccountDTO>
             {
@@ -37,11 +35,11 @@ namespace GTT.API.Test
                 }
             };
             var expectedReturnResult = new ServiceResponse<IEnumerable<QueryAccountDTO>>();
-            expectedReturnResult.CustomResponse(expectedResult,true,  "Retrieve data successful");
-          
+            expectedReturnResult.CustomResponse(expectedResult, true, "Retrieve data successful");
+
             var mockAccountService = new Mock<IAccountService>();
-            
-            mockAccountService.Setup( mockAccountService => mockAccountService.GetPagingAsync(searchDTO)).ReturnsAsync(expectedReturnResult);
+
+            mockAccountService.Setup(mockAccountService => mockAccountService.GetPagingAsync(searchDTO)).ReturnsAsync(expectedReturnResult);
             //Act
             var actualResult = await mockAccountService.Object.GetPagingAsync(searchDTO);
 

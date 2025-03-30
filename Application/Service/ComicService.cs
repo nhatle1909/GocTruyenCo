@@ -94,7 +94,7 @@ namespace Application.Service
             ServiceResponse<List<QueryComicDTO>> result = new();
             try
             {
-                var query = await _unitofwork.GetRepository<Comic>().PagingAsync(searchDTO.searchFields,searchDTO.searchValues, searchDTO.sortField
+                var query = await _unitofwork.GetRepository<Comic>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField
                     , searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip, ComicAggregation.ComicBsonAggregation);
 
                 var queryDTO = _mapper.Map<List<QueryComicDTO>>(query);

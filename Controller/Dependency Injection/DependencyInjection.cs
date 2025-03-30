@@ -71,7 +71,7 @@ namespace Controller.Dependency_Injection
                     ValidAudience = configuration.GetRequiredSection("JWT:audience").Value,
                     ClockSkew = TimeSpan.Zero
                 };
-               
+
             }); ;
             services.AddAuthorization();
 

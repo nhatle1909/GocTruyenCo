@@ -3,7 +3,6 @@ using Application.Interface;
 using CloudinaryDotNet;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Driver;
 
 namespace Infrastructure.Configuration
 {
@@ -13,10 +12,15 @@ namespace Infrastructure.Configuration
         {
 
             //ConnectionString
-            services.AddSingleton<IMongoClient, MongoClient>(s =>
+            services.AddSingleton<MongoDbOptions>(s =>
             {
                 var uri = s.GetRequiredService<IConfiguration>()["ConnectionString"];
-                return new MongoClient(uri);
+                return
+                new MongoDbOptions
+                {
+                    ConnectionString = uri,
+                    DatabaseName = s.GetRequiredService<IConfiguration>()["DatabaseName"]
+                };
             });
 
             //Unitofwork

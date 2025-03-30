@@ -1,8 +1,8 @@
 ﻿
 using Application.Interface;
 using CloudinaryDotNet;
+using Infrastructure.Configuration;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 
 namespace Infrastructure
@@ -12,16 +12,17 @@ namespace Infrastructure
         private readonly IMongoDatabase _database;
         private readonly IMemoryCache _memoryCache;
         private readonly Dictionary<Type, object> _repositories;
-        private readonly IConfiguration _configuration;
+        //private readonly IConfiguration _configuration;
         private readonly Cloudinary _cloudinary;
         private ICloudinaryRepository _cloudinaryRepository;
 
 
-        public Unitofwork(IMongoClient client, IConfiguration configuration, IMemoryCache memoryCache, Cloudinary cloudinary)
+        public Unitofwork(MongoDbOptions options, IMemoryCache memoryCache, Cloudinary cloudinary)
         {
-            _configuration = configuration;
+
             _memoryCache = memoryCache;
-            _database = client.GetDatabase(_configuration.GetSection("DatabaseName").Value);
+            //_database = client.GetDatabase(_configuration.GetSection("DatabaseName").Value);
+            _database = new MongoClient(options.ConnectionString).GetDatabase(options.DatabaseName);
             _repositories = new Dictionary<Type, object>();
             _cloudinary = cloudinary;
         }

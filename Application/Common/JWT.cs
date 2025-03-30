@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -46,12 +45,12 @@ namespace Application.Common
                 SigningCredentials = creds,
             };
 
-            
+
 
             // 5. Generate Token
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-           
+
             // 6. Return Token as String
             return tokenHandler.WriteToken(token);
         }

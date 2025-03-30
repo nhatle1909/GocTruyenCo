@@ -16,13 +16,13 @@ namespace Application.Service
             _unitofwork = unitofwork;
             _mapper = mapper;
         }
-        public async Task<ServiceResponse<bool>> CreateChapterImagesAsync(Guid comicChapterId,List<CommandComicChapterImageDTO> createChapterImageDTO)
+        public async Task<ServiceResponse<bool>> CreateChapterImagesAsync(Guid comicChapterId, List<CommandComicChapterImageDTO> createChapterImageDTO)
         {
             ServiceResponse<bool> result = new();
             try
             {
                 var items = _mapper.Map<IEnumerable<ComicChapterImage>>(createChapterImageDTO);
-                
+
                 var itemList = items.ToList();
                 itemList.ForEach(x => x.ComicChapterId = comicChapterId);
                 bool command = await _unitofwork.GetRepository<ComicChapterImage>().AddManyItemAsync(itemList);

@@ -16,7 +16,7 @@ namespace Application.Service
         private readonly string[] emailField = ["Email"];
         private readonly IConfiguration _configuration;
         private readonly JWT _jwt;
-        public AuthenticateService(IUnitofwork unitofwork, IMapper mapper, IConfiguration configuration,ISendMailOTPRepository sendMailOTPRepository)
+        public AuthenticateService(IUnitofwork unitofwork, IMapper mapper, IConfiguration configuration, ISendMailOTPRepository sendMailOTPRepository)
         {
             _unitofwork = unitofwork;
             _mapper = mapper;
@@ -33,7 +33,7 @@ namespace Application.Service
 
             var query = await _unitofwork.GetRepository<Account>().GetAllByFilterAsync(emailField, loginData);
             var account = query.FirstOrDefault();
-            
+
             if (account == null)
             {
                 result.CustomResponse("", false, "Account not found");

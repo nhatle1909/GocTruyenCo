@@ -1,13 +1,10 @@
-using Application.Common;
 using Application.DTO;
-using Application.Interface;
-using Application.Interface.Service;
 
 using Domain.Entities;
 using Infrastructure;
+using Infrastructure.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 using MongoDB.Driver;
-using Moq;
 using System.Globalization;
 
 namespace GTT.IntegrationTest.Infrastructure
@@ -18,11 +15,16 @@ namespace GTT.IntegrationTest.Infrastructure
         private GenericRepository<Account> _genericRepository;
         private IMongoClient _mongoClient;
         private IMemoryCache _memoryCache;
-
         public GenericRepositoryTest()
         {
-            _mongoClient = new MongoClient("mongodb+srv://cadenzavna:cadenz@cadenz.zmjag.mongodb.net/?retryWrites=true&w=majority&appName=Cadenz");
-            var IMongoDatabase = _mongoClient.GetDatabase("TestDatabase");
+            //instance an IConfiguration of asp
+            MongoDbOptions options = new MongoDbOptions
+            {
+                ConnectionString = "mongodb://localhost:27017",
+                DatabaseName = "TestDatabase"
+            };
+            _mongoClient = new MongoClient(options.ConnectionString);
+            var IMongoDatabase = _mongoClient.GetDatabase(options.DatabaseName);
             _memoryCache = new MemoryCache(new MemoryCacheOptions());
             _genericRepository = new GenericRepository<Account>(
                 IMongoDatabase,
@@ -39,6 +41,7 @@ namespace GTT.IntegrationTest.Infrastructure
                 CreatedDate = DateTime.Now.ToString("d", new CultureInfo("vi-VN")),
                 isDeleted = false
             };
+
         }
         //Test with T = Account
 
