@@ -177,7 +177,7 @@ namespace Infrastructure
 
             for (int i = 0; i < searchFields.Length; i++)
             {
-                FilterDefinition<T> tempFilter = Builders<T>.Filter.Regex(searchFields[i], searchValue[i]);
+                FilterDefinition<T> tempFilter = Builders<T>.Filter.Eq(searchFields[i], searchValue[i]);
                 filterDefinition = Builders<T>.Filter.And(filterDefinition, tempFilter);
             }
 

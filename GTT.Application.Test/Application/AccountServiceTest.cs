@@ -24,12 +24,14 @@ namespace GTT.IntegrationTest.Application
         private readonly AccountService _accountService;
         public Account_accountServiceTest()
         {
-
+            
             MongoDbOptions options = new MongoDbOptions
             {
                 ConnectionString = "mongodb://localhost:27017",
                 DatabaseName = "TestDatabase"
             };
+      
+
             _memoryCache = new MemoryCache(new MemoryCacheOptions());
             _cloudinary = new CloudinaryDotNet.Cloudinary(new CloudinaryDotNet.Account("cloudName", "apiKey", "apiSecret"));
             _mapper = new MapperConfiguration(cfg => cfg.AddProfile<MapperProfile>()).CreateMapper();
@@ -186,6 +188,69 @@ namespace GTT.IntegrationTest.Application
             Assert.NotNull(result.Result);
             Assert.True(result.Result.Count() > 0 && result.Result.Count() <= searchDTO.pageSize);
 
+        }
+        [Fact]
+        public async Task GetPagingAsync_SearchByUsernameAndEmail_Success()
+        {
+            //Arrange
+            SearchDTO searchDTO = new SearchDTO
+            {
+                searchFields = ["Username","Email"],
+                searchValues = ["","adm"],
+                sortField = "Username",
+                sortAscending = true,
+                pageSize = 10,
+                skip = 1
+            };
+            //Act
+            var result = await _accountService.GetPagingAsync(searchDTO);
+            //Assert
+            Assert.True(result.Success);
+            Assert.NotNull(result.Result);
+            Assert.True(result.Result.Count() > 0 && result.Result.Count() <= searchDTO.pageSize);
+
+        }
+        [Fact]
+        public async Task CountAsync_SearchByEmail_Success()
+        {
+            //Arrange
+            CountDTO searchDTO = new CountDTO
+            {
+                searchFields = ["Email"],
+                searchValues = [""],
+                pageSize = 10,
+              
+            };
+            //Act
+            var result = await _accountService.CountAsync(searchDTO);
+            //Assert
+            Assert.True(result.Success);
+            Assert.NotNull(result.Result);
+            Assert.True(result.Result >= 0);
+        }
+        [Fact]
+        public async Task UpdateAccount()
+        {
+            // Arrange
+
+            await _unitofwork.GetRepository<Account>().AddOneItemAsync(account);
+
+            // Act
+            var result = await _accountService.UpdateAccountAsync(account.Id, new CommandAccountDTO {Password = account.Password, Username = "newUsername" });
+            //Assert
+            Assert.True(result.Success);
+            Assert.Equal("Data updated successful", result.Message);
+        }
+        [Fact]
+        public async Task UpdateAccount_NotFound()
+        {
+            // Arrange
+
+            // Act
+            var result = await _accountService.UpdateAccountAsync(Guid.NewGuid(), new CommandAccountDTO { Password = account.Password, Username = "newUsername" });
+            //Assert
+            Assert.False(result.Success);
+            Assert.Equal("Account not found", result.Message);
         }
     }
 }

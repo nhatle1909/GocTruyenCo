@@ -115,6 +115,7 @@ namespace Application.Service
                 }
 
                 var account = query.FirstOrDefault();
+                item.Id = account.Id;
                 bool command = await _unitofwork.GetRepository<Account>().UpdateItemAsync(account.Id, item); ;
 
                 if (command)
