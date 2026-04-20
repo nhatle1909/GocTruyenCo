@@ -73,7 +73,7 @@ namespace Application.Service
 
             try
             {
-                var query = await _unitofwork.GetRepository<Comic>().GetByIdAsync(id, ComicAggregation.ComicBsonAggregation);
+                var query = await _unitofwork.GetRepository<Comic>().GetByIdAsync(id);
 
                 if (query == null)
                 {
