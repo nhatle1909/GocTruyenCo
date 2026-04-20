@@ -113,8 +113,13 @@ namespace Infrastructure
             SortDefinition<T> sortDefinition = isAsc ? Builders<T>.Sort.Ascending(sortField) : Builders<T>.Sort.Descending(sortField);
 
             //Query
-            IAggregateFluent<T> query = _collection.Aggregate()
-                               .Match(filterDefinition);
+            IAggregateFluent<T> query = _collection.Aggregate().Match(filterDefinition);
+
+            //Sort and paging
+            query = query.Sort(sortDefinition)
+                         .Skip((skip - 1) * pageSize)
+                         .Limit(pageSize);
+
             if (aggregates != null)
             {
                 foreach (var item in aggregates)
@@ -122,10 +127,7 @@ namespace Infrastructure
                     query = query.AppendStage<T>(item);
                 }
             }
-            //Sort and paging
-            query = query.Sort(sortDefinition)
-                         .Skip((skip - 1) * pageSize)
-                         .Limit(pageSize);
+           
 
             var result = await query.ToListAsync();
 

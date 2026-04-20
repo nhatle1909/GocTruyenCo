@@ -95,7 +95,7 @@ namespace Application.Service
             try
             {
                 var query = await _unitofwork.GetRepository<Comic>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField
-                    , searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip, ComicAggregation.ComicBsonAggregation);
+                    , searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip);
 
                 var queryDTO = _mapper.Map<List<QueryComicDTO>>(query);
 

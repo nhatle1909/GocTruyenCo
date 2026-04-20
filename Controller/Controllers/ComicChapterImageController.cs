@@ -15,6 +15,7 @@ namespace Controller.Controllers
         }
 
         [HttpPost]
+        [RequestSizeLimit(100_000_000)]
         public async Task<IActionResult> CreateComicChapterImagesAsync(Guid comicChapterId, List<CommandComicChapterImageDTO> commandComicChapterImageDTOs)
         {
             var query = await _comicChapterImageService.CreateChapterImagesAsync(comicChapterId, commandComicChapterImageDTOs);

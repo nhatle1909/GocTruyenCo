@@ -16,7 +16,6 @@ namespace Controller.Controllers
             _accountService = accountService;
             _logger = logger;
         }
-
         [HttpGet()]
         public async Task<IActionResult> PagingAsync([FromQuery] SearchDTO searchDTO)
         {

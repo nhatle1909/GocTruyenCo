@@ -8,7 +8,7 @@ namespace Domain.Entities
     public class Comic : BaseEntity
     {
         [BsonRepresentation(BsonType.String)] public required Guid UploaderId { get; set; }
-        [BsonRepresentation(BsonType.String)] public required List<Guid> CategoryId { get; set; }
+        public required List<string> CategoryId { get; set; }
         public required string Name { get; set; }
         public required string Description { get; set; }
         public required string ThemeURL { get; set; }

@@ -16,7 +16,10 @@ namespace Controller
             builder.Services.AddService();
             builder.Services.AddSettings(builder.Configuration);
             builder.Services.AddValidation();
-
+            builder.WebHost.ConfigureKestrel(options =>
+            {
+                options.Limits.MaxRequestBodySize = 100_000_000; // 100 MB
+            });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>

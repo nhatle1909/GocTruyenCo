@@ -59,6 +59,7 @@ namespace Infrastructure
                         Folder = chapter,
 
                     };
+          
                     var uploadResult = await _cloudinary.UploadAsync(uploadParams);
                     imageUrls.Add(uploadResult.Url.ToString());
                 }
