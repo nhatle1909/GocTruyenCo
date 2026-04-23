@@ -14,11 +14,20 @@ namespace Application.Common
         public static double expiryMinutes = 0;
         public JWT(IConfiguration configuration)
         {
+            var secretKey = Environment.GetEnvironmentVariable("JWT:secretkey");
+                var issuer = Environment.GetEnvironmentVariable("JWT:issuer");
+                var audience = Environment.GetEnvironmentVariable("JWT:audience");
+                var expiryMinutesFromEnv = Environment.GetEnvironmentVariable("JWT:expire");
+
+                if (string.IsNullOrEmpty(secretKey) || string.IsNullOrEmpty(issuer) || string.IsNullOrEmpty(audience) || string.IsNullOrEmpty(expiryMinutesFromEnv))
+                {
+                    throw new Exception("JWT configuration is missing in environment variables.");
+            }
             _configuration = configuration;
-            secretKey = _configuration.GetSection("JWT:secretkey").Value;
-            issuer = _configuration.GetSection("JWT:issuer").Value;
-            audience = _configuration.GetSection("JWT:audience").Value;
-            expiryMinutes = Double.Parse(_configuration.GetSection("JWT:expire").Value);
+            secretKey = secretKey ?? _configuration.GetSection("JWT:secretkey").Value;
+            issuer = issuer ?? _configuration.GetSection("JWT:issuer").Value;
+            audience = audience ?? _configuration.GetSection("JWT:audience").Value;
+            expiryMinutes = Double.TryParse(expiryMinutesFromEnv, out var result) ? result : Double.Parse(_configuration.GetSection("JWT:expire").Value);
         }
 
         public string GenerateJwtToken(string userId, string role, string username, string email)
