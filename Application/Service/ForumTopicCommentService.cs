@@ -23,7 +23,8 @@ namespace Application.Service
             ServiceResponse<IEnumerable<QueryForumTopicCommentDTO>> result = new();
             try
             {
-                var query = await _unitofwork.GetRepository<ForumTopicComment>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField,
+
+                var query = await _unitofwork.GetRepository<ForumTopicComment>().PagingAsync(searchDTO.fields, searchDTO.values, searchDTO.sortField,
                                                                                              searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip, ForumTopicCommentAggregation.ForumTopicCommentBsonAggregation);
                 var queryDTO = _mapper.Map<IEnumerable<QueryForumTopicCommentDTO>>(query);
                 await _unitofwork.CommitAsync();

@@ -14,7 +14,7 @@
     }
     public class CommandComicDTO
     {
-        public required Guid UploaderId { get; set; }
+        public required string UploaderId { get; set; }
         public required List<string> CategoryName { get; set; }
         public required string Name { get; set; }
         public required string Description { get; set; }

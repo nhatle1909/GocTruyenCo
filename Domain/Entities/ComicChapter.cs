@@ -7,6 +7,7 @@ namespace Domain.Entities
     {
         [BsonRepresentation(BsonType.String)] public required Guid ComicId { get; set; }
         public required string Name { get; set; }
+        public int ChapterIndex { get; set; }
 
     }
 }

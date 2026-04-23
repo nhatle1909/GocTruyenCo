@@ -80,7 +80,7 @@ namespace Application.Service
             ServiceResponse<IEnumerable<QueryBookmarkDTO>> result = new();
             try
             {
-                var query = await _unitofwork.GetRepository<Bookmark>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField,
+                var query = await _unitofwork.GetRepository<Bookmark>().PagingAsync(searchDTO.fields, searchDTO.values, searchDTO.sortField,
                                                                               searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip, BookmarkAggregation.BookmarkBsonAggregation);
                 var queryDTO = _mapper.Map<IEnumerable<QueryBookmarkDTO>>(query);
                 result.CustomResponse(queryDTO, true, "Retrieve data successful");

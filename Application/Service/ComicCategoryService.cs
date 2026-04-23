@@ -66,14 +66,15 @@ namespace Application.Service
             return result;
         }
 
-        public async Task<ServiceResponse<List<QueryComicCategoryDTO>>> GetComicCategoriesAsync(bool isHentai)
+        public async Task<ServiceResponse<List<QueryComicCategoryDTO>>> GetComicCategoriesAsync(bool isAdult)
         {
             ServiceResponse<List<QueryComicCategoryDTO>> result = new();
             try
             {
                 var query = await _unitofwork.GetRepository<ComicCategory>().GetAllAsync();
-
+                query = query.Where(category => category.IsAdultCategory == isAdult);
                 var queryDTO = _mapper.Map<List<QueryComicCategoryDTO>>(query);
+                
                 result.CustomResponse(queryDTO, true, "Retrieve data successful");
 
             }

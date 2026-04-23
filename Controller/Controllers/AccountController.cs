@@ -17,7 +17,7 @@ namespace Controller.Controllers
             _logger = logger;
         }
         [HttpGet()]
-        public async Task<IActionResult> PagingAsync([FromQuery] SearchDTO searchDTO)
+        public async Task<IActionResult> PagingAsync([FromQuery] SearchDTO searchDTO )
         {
             var query = await _accountService.GetPagingAsync(searchDTO);
             return Ok(query);

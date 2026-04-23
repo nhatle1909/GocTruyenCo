@@ -35,9 +35,19 @@ namespace Controller.Controllers
             return Ok(query);
         }
         [HttpGet]
-        public async Task<IActionResult> GetPaging([FromQuery] SearchDTO searchDTO)
+        public async Task<IActionResult> GetPaging([FromQuery] SearchDTO searchDTO )
         {
             var query = await _comicChapterService.GetChaptersPaging(searchDTO);
+            if (!query.Success)
+            {
+                return BadRequest(query);
+            }
+            return Ok(query);
+        }
+        [HttpGet("AdjacentChapter")]
+        public async Task<IActionResult> GetNeighbourChapterById(Guid comicId)
+        {
+            var query = await _comicChapterService.GetNeighbourChapterById(comicId);
             if (!query.Success)
             {
                 return BadRequest(query);

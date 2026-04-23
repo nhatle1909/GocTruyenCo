@@ -94,8 +94,8 @@ namespace Application.Service
             ServiceResponse<List<QueryComicDTO>> result = new();
             try
             {
-                var query = await _unitofwork.GetRepository<Comic>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField
-                    , searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip);
+                var query = await _unitofwork.GetRepository<Comic>().PagingAsync(searchDTO.fields, searchDTO.values, searchDTO.sortField
+                    , searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip,ComicAggregation.ComicBsonAggregation);
 
                 var queryDTO = _mapper.Map<List<QueryComicDTO>>(query);
 
@@ -149,6 +149,34 @@ namespace Application.Service
             {
                 var query = await _unitofwork.GetRepository<Comic>().CountAsync(countDTO.searchFields, countDTO.searchValues, countDTO.pageSize);
                 result.CustomResponse(query, true, "Count successful");
+            }
+            catch (Exception ex)
+            {
+                result.TryCatchResponse(ex);
+            }
+            return result;
+        }
+
+        public async Task<ServiceResponse<bool>> IncreaseChapterNumberAsync(Guid id)
+        {
+            ServiceResponse<bool> result = new();
+            try
+            {
+                var query = await _unitofwork.GetRepository<Comic>().GetByIdAsync(id);
+                if (query == null)
+                {
+                    result.CustomResponse(false, false, "Comic not found");
+                    return result;
+                }
+                query.Chapters += 1;
+                var command = _unitofwork.GetRepository<Comic>().UpdateItemAsync(id, query).Result;
+                if (!command)
+                {
+                    result.CustomResponse(false, false, "Increase chapter number failed");
+                    return result;
+                }
+                await _unitofwork.CommitAsync();
+                result.CustomResponse(true, true, "Increase chapter number successful");
             }
             catch (Exception ex)
             {

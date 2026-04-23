@@ -18,7 +18,7 @@ namespace Controller.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> PagingAsync([FromQuery] SearchDTO searchDTO)
+        public async Task<IActionResult> PagingAsync([FromQuery] SearchDTO searchDTO )
         {
             var query = await _bookmarkService.GetPagingAsync(searchDTO);
             return Ok(query);

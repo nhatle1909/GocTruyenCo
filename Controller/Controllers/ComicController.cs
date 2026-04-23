@@ -55,7 +55,7 @@ namespace Controller.Controllers
             return Ok(query);
         }
         [HttpGet]
-        public async Task<IActionResult> GetComicPagingAsync([FromQuery] SearchDTO searchDTO)
+        public async Task<IActionResult> GetComicPagingAsync([FromQuery] SearchDTO searchDTO )
         {
             var query = await _comicService.GetComicPagingAsync(searchDTO);
             return Ok(query);
@@ -64,6 +64,16 @@ namespace Controller.Controllers
         public async Task<IActionResult> Count([FromQuery] CountDTO countDTO)
         {
             var query = await _comicService.CountAsync(countDTO);
+            return Ok(query);
+        }
+        [HttpPut("ChapterNumber/{comicId}")]
+        public async Task<IActionResult> UpdateComicChapterNumberAsync(Guid comicId)
+        {
+            var query = await _comicService.IncreaseChapterNumberAsync(comicId);
+            if (!query.Success)
+            {
+                return BadRequest(query);
+            }
             return Ok(query);
         }
     }

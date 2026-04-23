@@ -14,9 +14,9 @@ namespace Controller.Controllers
             _comicCategoryService = comicCategoryService;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAction(bool isHentai)
+        public async Task<IActionResult> GetAction(bool isAdult)
         {
-            var query = await _comicCategoryService.GetComicCategoriesAsync(isHentai);
+            var query = await _comicCategoryService.GetComicCategoriesAsync(isAdult);
             return Ok(query);
         }
         [HttpPost]

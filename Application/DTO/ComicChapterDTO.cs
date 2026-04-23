@@ -5,6 +5,7 @@
         public required Guid Id { get; set; }
         public required Guid ComicId { get; set; }
         public required string Name { get; set; }
+        public required int ChapterIndex { get; set; }
         public required string CreatedDate { get; set; } 
     }
     public class CommandComicChapterDTO

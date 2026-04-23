@@ -17,7 +17,7 @@ namespace Controller.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> PagingAsync([FromQuery] SearchDTO searchDTO)
+        public async Task<IActionResult> PagingAsync([FromQuery] SearchDTO searchDTO )
         {
             var query = await _comicChapterCommentService.GetPagingAsync(searchDTO);
             return Ok(query);

@@ -46,7 +46,8 @@ namespace Application.Service
             ServiceResponse<IEnumerable<QueryComicChapterCommentDTO>> result = new();
             try
             {
-                var query = await _unitofwork.GetRepository<ComicChapterComment>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField,
+
+                var query = await _unitofwork.GetRepository<ComicChapterComment>().PagingAsync(searchDTO.fields, searchDTO.values, searchDTO.sortField,
                                                                                                searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip, ComicChapterCommentAggregation.ComicChapterCommentBsonAggregation);
                 var queryDTO = _mapper.Map<IEnumerable<QueryComicChapterCommentDTO>>(query);
                 result.CustomResponse(queryDTO, true, "Get comments successfully");

@@ -75,7 +75,8 @@ namespace Application.Service
             ServiceResponse<IEnumerable<QueryAccountDTO>> result = new();
             try
             {
-                var query = await _unitofwork.GetRepository<Account>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField
+
+                var query = await _unitofwork.GetRepository<Account>().PagingAsync(searchDTO.fields, searchDTO.values, searchDTO.sortField
                     , searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip);
                 var queryDTO = _mapper.Map<IEnumerable<QueryAccountDTO>>(query);
                 if (queryDTO == null)

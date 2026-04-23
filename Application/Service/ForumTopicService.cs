@@ -66,7 +66,8 @@ namespace Application.Service
             ServiceResponse<IEnumerable<QueryForumTopicDTO>> result = new();
             try
             {
-                var query = await _unitofwork.GetRepository<ForumTopic>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField,
+
+                var query = await _unitofwork.GetRepository<ForumTopic>().PagingAsync(searchDTO.fields, searchDTO.values, searchDTO.sortField,
                                                                                      searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip, ForumTopicAggregation.ForumTopicBsonAggregation);
                 var queryDTO = _mapper.Map<IEnumerable<QueryForumTopicDTO>>(query);
 

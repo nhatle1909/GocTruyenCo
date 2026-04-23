@@ -10,5 +10,6 @@ namespace Application.Interface.Service
         Task<ServiceResponse<bool>> UpdateChapter(Guid chapterId, CommandComicChapterDTO commandComicChapterDTO);
         Task<ServiceResponse<string>> CreateChapter(CommandComicChapterDTO commandComicChapterDTO);
         Task<ServiceResponse<long>> CountAsync(CountDTO countDTO);
+        Task<ServiceResponse<List<Guid>>> GetNeighbourChapterById(Guid chapterId);
     }
 }

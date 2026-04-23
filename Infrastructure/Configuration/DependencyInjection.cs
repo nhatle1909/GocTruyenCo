@@ -10,16 +10,22 @@ namespace Infrastructure.Configuration
     {
         public static void AddInfrastructureService(this IServiceCollection services)
         {
+            //Environment Variable
+            var connectionString = Environment.GetEnvironmentVariable("ConnectionString");
+            var databaseName = Environment.GetEnvironmentVariable("DatabaseName");
+            var cloudinaryName = Environment.GetEnvironmentVariable("Cloudinary:CloudName");
+            var cloudinaryApiKey = Environment.GetEnvironmentVariable("Cloudinary:ApiKey");
+            var cloudinaryApiSecret = Environment.GetEnvironmentVariable("Cloudinary:ApiSecret");
 
             //ConnectionString
             services.AddSingleton<MongoDbOptions>(s =>
             {
-                var uri = s.GetRequiredService<IConfiguration>()["ConnectionString"];
+                var uri = connectionString ?? s.GetRequiredService<IConfiguration>()["ConnectionString"];
                 return
                 new MongoDbOptions
                 {
                     ConnectionString = uri,
-                    DatabaseName = s.GetRequiredService<IConfiguration>()["DatabaseName"]
+                    DatabaseName =databaseName ?? s.GetRequiredService<IConfiguration>()["DatabaseName"]
                 };
             });
 
@@ -31,9 +37,9 @@ namespace Infrastructure.Configuration
             services.AddScoped<ICloudinaryRepository, CloudinaryRepository>();
             services.AddScoped<ISendMailOTPRepository, SendMailOTPRepository>();
 
-            services.AddSingleton(services => new Cloudinary(new Account(services.GetRequiredService<IConfiguration>()["Cloudinary:CloudName"],
-                                                                         services.GetRequiredService<IConfiguration>()["Cloudinary:ApiKey"],
-                                                                         services.GetRequiredService<IConfiguration>()["Cloudinary:ApiSecret"])));
+            services.AddSingleton(services => new Cloudinary(new Account(cloudinaryName ?? services.GetRequiredService<IConfiguration>()["Cloudinary:CloudName"],
+                                                                         cloudinaryApiKey ?? services.GetRequiredService<IConfiguration>()["Cloudinary:ApiKey"],
+                                                                         cloudinaryApiSecret ?? services.GetRequiredService<IConfiguration>()["Cloudinary:ApiSecret"])));
 
         }
     }

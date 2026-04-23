@@ -64,7 +64,7 @@ namespace Application.Service
             try
             {
 
-                var query = await _unitofwork.GetRepository<ComicChapter>().PagingAsync(searchDTO.searchFields, searchDTO.searchValues, searchDTO.sortField,
+                var query = await _unitofwork.GetRepository<ComicChapter>().PagingAsync(searchDTO.fields, searchDTO.values, searchDTO.sortField,
                                                                                         searchDTO.sortAscending, searchDTO.pageSize, searchDTO.skip);
 
                 var data = _mapper.Map<IEnumerable<QueryComicChapterDTO>>(query);
@@ -115,6 +115,26 @@ namespace Application.Service
             {
                 var query = await _unitofwork.GetRepository<ComicChapter>().CountAsync(countDTO.searchFields, countDTO.searchValues, countDTO.pageSize);
                 result.CustomResponse(query, true, "Count successful");
+            }
+            catch (Exception ex)
+            {
+                result.TryCatchResponse(ex);
+            }
+            return result;
+        }
+
+        public async Task<ServiceResponse<List<Guid>>> GetNeighbourChapterById(Guid chapterId)
+        {
+            ServiceResponse<List<Guid>> result = new();
+            try
+            {
+                var chapter = await _unitofwork.GetRepository<ComicChapter>().GetByIdAsync(chapterId);
+                var comicId = chapter.ComicId;
+                var chapterList = await _unitofwork.GetRepository<ComicChapter>().GetAllByFilterAsync(new string[] { "ComicId" }, new string[] { comicId.ToString() });
+                var chapterIndex = chapter.ChapterIndex;
+                //var allChapter = await _unitofwork.GetRepository<ComicChapter>().GetAllByFilterAsync
+                //var queryDTO = _mapper.Map<List<Guid>>(query);
+                result.CustomResponse([], true, "Get neighbour chapter successful");
             }
             catch (Exception ex)
             {
