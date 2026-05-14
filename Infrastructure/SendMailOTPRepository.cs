@@ -20,11 +20,11 @@ namespace Infrastructure
         {
             _memoryCache = memoryCache;
             _configuration = configuration;
-            smtpServer = _configuration.GetSection("EmailSettings:SmtpServer").Value;
-            smtpPort = Convert.ToInt32(_configuration.GetSection("EmailSettings:SmtpPort").Value);
-            smtpUsername = _configuration.GetSection("EmailSettings:SmtpUsername").Value;
-            senderEmail = _configuration.GetSection("EmailSettings:FromEmail").Value;
-            senderAppPassword = _configuration.GetSection("EmailSettings:SmtpPassword").Value;
+            smtpServer = configuration["EmailSettings:SmtpServer"];
+            smtpPort = Convert.ToInt32(_configuration["EmailSettings:SmtpPort"]);
+            smtpUsername = configuration["EmailSettings:SmtpUsername"];
+            senderEmail = configuration["EmailSettings:Recipient"];
+            senderAppPassword = configuration["EmailSettings:SmtpPass"];
 
         }
 

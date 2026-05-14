@@ -10,9 +10,10 @@ namespace Controller
         {
 
             var builder = WebApplication.CreateBuilder(args);
-
+            DotNetEnv.Env.Load();
+            builder.Configuration.AddEnvironmentVariables();
             // Add services to the container.
-            builder.Services.AddInfrastructure();
+            builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.AddService();
             builder.Services.AddSettings(builder.Configuration);
             builder.Services.AddValidation();

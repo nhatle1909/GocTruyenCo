@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -7,29 +8,39 @@ namespace Application.Common
 {
     public class JWT
     {
-        private IConfiguration _configuration;
-        public static string secretKey = "";
-        public static string issuer = "";
-        public static string audience = "";
-        public static double expiryMinutes = 0;
-        public JWT(IConfiguration configuration)
+        //private IConfiguration _configuration;
+        //public static string secretKey = "";
+        //public static string issuer = "";
+        //public static string audience = "";
+        //public static double expiryMinutes = 0;
+        //public JWT(IConfiguration configuration)
+        //{
+        //    var secretKey = Environment.GetEnvironmentVariable("JWT:secretkey");
+        //    var issuer = Environment.GetEnvironmentVariable("JWT:issuer");
+        //    var audience = Environment.GetEnvironmentVariable("JWT:audience");
+        //    var expiryMinutesFromEnv = Environment.GetEnvironmentVariable("JWT:expire");
+
+        //    if (string.IsNullOrEmpty(secretKey) || string.IsNullOrEmpty(issuer) || string.IsNullOrEmpty(audience) || string.IsNullOrEmpty(expiryMinutesFromEnv))
+        //    {
+        //            throw new Exception("JWT configuration is missing in environment variables.");
+        //    }
+        //    _configuration = configuration;
+        //    secretKey = secretKey ?? _configuration.GetSection("JWT:secretkey").Value;
+        //    issuer = issuer ?? _configuration.GetSection("JWT:issuer").Value;
+        //    audience = audience ?? _configuration.GetSection("JWT:audience").Value;
+        //    expiryMinutes = Double.TryParse(expiryMinutesFromEnv, out var result) ? result : Double.Parse(_configuration.GetSection("JWT:expire").Value);
+        //}
+        private readonly JWTSettings _settings;
+
+        // Constructor receives the settings automatically via Dependency Injection
+        public JWT(IOptions<JWTSettings> options)
         {
-            var secretKey = Environment.GetEnvironmentVariable("JWT:secretkey");
-                var issuer = Environment.GetEnvironmentVariable("JWT:issuer");
-                var audience = Environment.GetEnvironmentVariable("JWT:audience");
-                var expiryMinutesFromEnv = Environment.GetEnvironmentVariable("JWT:expire");
+            _settings = options.Value;
 
-                if (string.IsNullOrEmpty(secretKey) || string.IsNullOrEmpty(issuer) || string.IsNullOrEmpty(audience) || string.IsNullOrEmpty(expiryMinutesFromEnv))
-                {
-                    throw new Exception("JWT configuration is missing in environment variables.");
-            }
-            _configuration = configuration;
-            secretKey = secretKey ?? _configuration.GetSection("JWT:secretkey").Value;
-            issuer = issuer ?? _configuration.GetSection("JWT:issuer").Value;
-            audience = audience ?? _configuration.GetSection("JWT:audience").Value;
-            expiryMinutes = Double.TryParse(expiryMinutesFromEnv, out var result) ? result : Double.Parse(_configuration.GetSection("JWT:expire").Value);
+            // Simple validation to ensure settings were loaded
+            if (string.IsNullOrEmpty(_settings.SecretKey))
+                throw new Exception("JWT Secret Key is missing from configuration.");
         }
-
         public string GenerateJwtToken(string userId, string role, string username, string email)
         {
             var claims = new List<Claim>{
@@ -39,7 +50,7 @@ namespace Application.Common
                 new Claim(ClaimTypes.Email,email)
             };
 
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey));
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_settings.SecretKey));
 
             // 3. Create Signing Credentials
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -48,9 +59,9 @@ namespace Application.Common
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(expiryMinutes), // Token expiration time
-                Issuer = issuer,
-                Audience = audience,
+                Expires = DateTime.UtcNow.AddMinutes(_settings.ExpiryMinutes), // Token expiration time
+                Issuer = _settings.Issuer,
+                Audience = _settings.Audience,
                 SigningCredentials = creds,
             };
 
@@ -63,5 +74,13 @@ namespace Application.Common
             // 6. Return Token as String
             return tokenHandler.WriteToken(token);
         }
+       
+    }
+    public class JWTSettings
+    {
+        public string SecretKey { get; set; } = string.Empty;
+        public string Issuer { get; set; } = string.Empty;
+        public string Audience { get; set; } = string.Empty;
+        public double ExpiryMinutes { get; set; }
     }
 }

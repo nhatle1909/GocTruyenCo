@@ -5,6 +5,7 @@ using Application.Interface.Service;
 using AutoMapper;
 using Domain.Entities;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Application.Service
 {
@@ -14,9 +15,9 @@ namespace Application.Service
         private readonly ISendMailOTPRepository _sendMailOTPRepository;
         private readonly IMapper _mapper;
         private readonly string[] emailField = ["Email"];
-        private readonly IConfiguration _configuration;
+        private readonly IOptions<JWTSettings> _configuration;
         private readonly JWT _jwt;
-        public AuthenticateService(IUnitofwork unitofwork, IMapper mapper, IConfiguration configuration, ISendMailOTPRepository sendMailOTPRepository)
+        public AuthenticateService(IUnitofwork unitofwork, IMapper mapper, IOptions<JWTSettings> configuration, ISendMailOTPRepository sendMailOTPRepository)
         {
             _unitofwork = unitofwork;
             _mapper = mapper;

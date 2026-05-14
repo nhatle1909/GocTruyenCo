@@ -12,9 +12,9 @@ namespace Controller.Dependency_Injection
 {
     public static class DependencyInjection
     {
-        public static void AddInfrastructure(this IServiceCollection services)
+        public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddInfrastructureService();
+            services.AddInfrastructureService(configuration);
         }
         public static void AddService(this IServiceCollection services)
         {
@@ -31,9 +31,10 @@ namespace Controller.Dependency_Injection
         public static void AddSettings(this IServiceCollection services, IConfiguration configuration)
         {
             //Environment variable
-            var validIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
-            var validAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
-            var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET");
+            var secretKey = configuration["JWT:SecretKey"];
+            var validIssuer = configuration["JWT:Issuer"];
+            var validAudience = configuration["JWT:Audience"];
+
 
             //CORS
             services.AddCors(options =>
@@ -73,8 +74,8 @@ namespace Controller.Dependency_Injection
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey ?? throw new ArgumentNullException("builder.Configuration[\"Jwt:secretkey\"]", "Jwt:secretkey is null"))),
-                    ValidIssuer = validIssuer ?? configuration.GetRequiredSection("JWT:issuer").Value,
-                    ValidAudience = validAudience ?? configuration.GetRequiredSection("JWT:audience").Value,
+                    ValidIssuer = validIssuer ?? throw new ArgumentNullException("builder.Configuration[\"Jwt:issuer\"]", "Jwt:issuer is null"),
+                    ValidAudience = validAudience ?? throw new ArgumentNullException("builder.Configuration[\"Jwt:audience\"]", "Jwt:audience is null"),
                     ClockSkew = TimeSpan.Zero
                 };
 

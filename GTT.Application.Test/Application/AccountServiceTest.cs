@@ -174,8 +174,8 @@ namespace GTT.IntegrationTest.Application
             //Arrange
             SearchDTO searchDTO = new SearchDTO
             {
-                searchFields = ["Email"],
-                searchValues = [""],
+                fields= ["Email"],
+                values = [""],
                 sortField = "Username",
                 sortAscending = true,
                 pageSize = 10,
@@ -195,8 +195,8 @@ namespace GTT.IntegrationTest.Application
             //Arrange
             SearchDTO searchDTO = new SearchDTO
             {
-                searchFields = ["Username","Email"],
-                searchValues = ["","adm"],
+                fields = ["Username","Email"],
+                values = ["","adm"],
                 sortField = "Username",
                 sortAscending = true,
                 pageSize = 10,
