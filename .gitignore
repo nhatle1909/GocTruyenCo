@@ -365,3 +365,4 @@ FodyWeavers.xsd
 /GocTruyenCo.sln
 
 Controller/appsettings.json
+/Controller/.env
